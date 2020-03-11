@@ -1,0 +1,129 @@
+2020-02-28 15:19:57,644 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:51]
+2020-02-28 17:57:17,294 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:51]
+2020-02-28 17:58:16,337 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:51]
+2020-02-28 19:51:14,044 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:51]
+2020-02-28 19:51:39,808 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:51]
+2020-02-28 19:51:49,539 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:51]
+2020-02-28 19:51:53,084 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:51]
+2020-02-28 19:52:02,619 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:51]
+2020-02-28 19:58:58,471 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:51]
+2020-02-28 22:52:53,400 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:51]
+2020-02-28 23:28:41,178 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:51]
+2020-02-28 23:37:29,920 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:51]
+2020-02-29 00:06:36,846 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 00:12:18,355 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 00:25:23,021 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 00:41:37,825 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 00:51:05,557 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 12:01:48,800 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 12:10:32,645 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 12:14:10,443 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 12:14:16,476 ERROR: Exception on /reset_password_request [POST] [in /Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/apple/microblog/app/routes.py", line 169, in reset_password_request
+    if form.validate_on_submit():
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask_wtf/form.py", line 100, in validate_on_submit
+    return self.is_submitted() and self.validate()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/wtforms/form.py", line 310, in validate
+    return super(Form, self).validate(extra)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/wtforms/form.py", line 152, in validate
+    if not field.validate(self, extra):
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/wtforms/fields/core.py", line 206, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/wtforms/fields/core.py", line 226, in _run_validation_chain
+    validator(form, self)
+  File "/Users/apple/microblog/app/forms.py", line 59, in validate_email
+    if email.validate():
+TypeError: validate() missing 1 required positional argument: 'form'
+2020-02-29 12:27:20,399 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 12:27:23,439 ERROR: Exception on /login [GET] [in /Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/apple/microblog/app/routes.py", line 56, in login
+    return render_template('login.html', title='Sign In', form=form)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/templating.py", line 140, in render_template
+    ctx.app,
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/templating.py", line 120, in _render
+    rv = template.render(context)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/jinja2/environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "/Users/apple/microblog/app/templates/login.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/Users/apple/microblog/app/templates/base.html", line 26, in top-level template code
+    {% for category, message in messages %}
+ValueError: too many values to unpack (expected 2)
+2020-02-29 12:29:23,108 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 12:33:04,150 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 12:39:01,937 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 12:41:49,452 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 12:44:11,815 ERROR: Exception on /reset_password_request [POST] [in /Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/apple/microblog/app/routes.py", line 172, in reset_password_request
+    send_password_reset_email(user)
+  File "/Users/apple/microblog/app/email.py", line 25, in send_password_reset_email
+    user=user, token=token))
+TypeError: send_email() missing 1 required positional argument: 'html_body'
+2020-02-29 12:46:16,983 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 12:46:27,528 ERROR: Exception on /reset_password_request [POST] [in /Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/apple/microblog/app/routes.py", line 173, in reset_password_request
+    flash('Check your email for the instructions to reset your password', catgory='info')
+TypeError: flash() got an unexpected keyword argument 'catgory'
+2020-02-29 12:47:30,481 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 13:07:31,143 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 13:07:38,739 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 13:07:46,113 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 13:08:48,620 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 13:32:15,518 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 13:33:43,918 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]

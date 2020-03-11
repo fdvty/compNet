@@ -1,0 +1,81 @@
+2020-02-29 14:01:40,548 ERROR: Exception on /reset_password_request [POST] [in /Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/apple/microblog/app/routes.py", line 172, in reset_password_request
+    send_password_reset_email(user)
+  File "/Users/apple/microblog/app/email.py", line 28, in send_password_reset_email
+    user=user, token=token))
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/templating.py", line 138, in render_template
+    ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/jinja2/environment.py", line 930, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/jinja2/environment.py", line 883, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/jinja2/environment.py", line 857, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/jinja2/loaders.py", line 117, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/templating.py", line 60, in get_source
+    return self._get_source_fast(environment, template)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/templating.py", line 89, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: email/reset_password.html
+2020-02-29 14:03:30,190 ERROR: Exception on /reset_password_request [POST] [in /Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/apple/microblog/app/routes.py", line 172, in reset_password_request
+    send_password_reset_email(user)
+  File "/Users/apple/microblog/app/email.py", line 28, in send_password_reset_email
+    #                                          user=user, token=token))
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/templating.py", line 138, in render_template
+    ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/jinja2/environment.py", line 930, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/jinja2/environment.py", line 883, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/jinja2/environment.py", line 857, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/jinja2/loaders.py", line 117, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/templating.py", line 60, in get_source
+    return self._get_source_fast(environment, template)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/templating.py", line 89, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: email/reset_password.html
+2020-02-29 14:06:35,887 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 14:08:41,187 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 14:31:46,240 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 14:47:34,279 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 14:51:44,998 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 14:53:03,701 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 16:05:02,528 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 16:05:47,312 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 16:10:40,452 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 16:12:09,599 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 16:14:15,513 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 17:47:33,963 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 17:52:32,997 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-03-01 15:37:16,943 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-03-01 15:38:49,120 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
