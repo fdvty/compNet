@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+
+{% block title %}Manage Units{% endblock %}
+
+{% block app_content %}
+<div class="page-header">
+    <h1>Units
+        <small class="text-muted">{{ pagination.total }}</small>
+        <a class="btn btn-primary btn-sm" href="{{ url_for('unit_add') }}" style="float:right">New Unit</a>
+    </h1>
+</div>
+{% if units %}
+
+<script type="text/javascript" src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.15.4/bootstrap-table.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap-table/1.16.0/bootstrap-table.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap-table/1.16.0/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+
+
+<table id = "table" class="table table-striped"  data-filter-control="true" data-show-clear="true">
+    <thead>
+    <tr>
+        <th>No.</th>
+        <th data-field="name" data-filter-control="input">Name</th>
+        <th data-field="age" data-filter-control="select">Age</th>
+        <th data-field="time" data-filter-control="input">Time</th>
+        <th data-field="owner" data-filter-control="input">Owner</th>
+        <th data-field="comment" data-filter-control="input">Comment</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    {% for unit in units %}
+    <tr>
+        <td>{{ loop.index + ((page - 1) * config.UNITS_PER_PAGE) }}</td>
+        <td>{{ unit.name }}</td>
+        <td>{{ unit.age }}</td>
+        <td>{{ moment(unit.timestamp).format('LLL') }}</td>
+        <td><a href="{{ url_for('user', username=unit.owner.username) }}">{{ unit.owner.username }}</a></td>
+        <td>{{ unit.comment }}</td>
+        <td>
+            <a class="btn btn-info btn-sm" href="{{ url_for('unit_edit', unit_id=unit.id, next=request.full_path) }}">Edit</a>
+            <form style="display: inline" class="inline" method="post" action="{{ url_for('unit_delete', unit_id=unit.id, next=request.full_path) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<script>
+    var $table = $('#table')
+    $(function() {
+        $table.bootstrapTable()
+    })
+</script>
+
+
+<div class="page-footer">{{ render_pagination(pagination) }}</div>
+{% else %}
+<div class="tip"><h5>No posts.</h5></div>
+{% endif %}
+{% endblock %}
+
+

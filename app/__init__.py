@@ -6,7 +6,7 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
-
+from flask_wtf.csrf import CSRFProtect
 
 import logging
 from logging.handlers import SMTPHandler
@@ -16,6 +16,8 @@ import os
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
+csrf = CSRFProtect()
+csrf.init_app(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'

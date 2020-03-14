@@ -36,16 +36,24 @@
 
 {% block content %}
     <div class="container">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-info" role="alert">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-        {% endwith %}
+        {% for message in get_flashed_messages(with_categories=True) %}
+            <div class="alert alert-{% if message[0] == 'message' %}info{% else %}{{ message[0] }}{% endif %}">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message[1] }}
+            </div>
+        {% endfor %}
 
         {# application content needs to be provided in the app_content block #}
         {% block app_content %}{% endblock %}
+
+        <hr>
+        <footer class="text-center">
+            {% block footer %}
+                <small> &copy; Team of PKU Computer Network Course, Spring 2020; Credit to: Zirui Liu, Wentao Wang, Xinyu Di
+                </small>
+                <p><a id="bottom" href="#" title="Go Top">&uarr;</a></p>
+            {% endblock %}
+        </footer>
     </div>
 {% endblock %}
 
@@ -53,3 +61,5 @@
     {{super()}}
     {{moment.include_moment()}}
 {% endblock %}
+
+

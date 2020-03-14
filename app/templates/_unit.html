@@ -1,0 +1,22 @@
+
+    <table class="table table-hover">
+        <tr>
+            <td width="70px">
+                <a href="{{ url_for('user', username=unit.owner.username) }}">
+                    <img src="{{ unit.owner.avatar(70) }}" />
+                </a>
+            </td>
+            <td>
+                <a href="{{ url_for('user', username=unit.owner.username) }}">
+                    {{ unit.owner.username }}
+                </a>
+                post {{ moment(unit.timestamp).fromNow() }}:
+                <br>
+                {{ unit.name }}
+                <br>
+                {{ unit.age }} years old
+                <br>
+                {{ unit.comment }}
+            </td>
+        </tr>
+    </table>

@@ -19,9 +19,10 @@ class User(UserMixin, db.Model):
 	username = db.Column(db.String(64), index=True, unique=True)
 	email = db.Column(db.String(120), index=True, unique=True)
 	password_hash = db.Column(db.String(128))
-	posts = db.relationship('Post', backref='author', lazy='dynamic')
 	about_me = db.Column(db.String(140))
 	last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+	posts = db.relationship('Post', backref='author', lazy='dynamic')
+	units = db.relationship('Unit', backref='owner', lazy='dynamic')
 
 	followed = db.relationship(
 		'User', secondary=followers,
@@ -79,6 +80,16 @@ class User(UserMixin, db.Model):
 		return User.query.get(id)
 
 
+class Unit(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	comment = db.Column(db.String(140))
+	age = db.Column(db.Integer)
+	name = db.Column(db.String(40))
+	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+	def __repr__(self):
+		return '<Item {}>'.format(self.comment)
 
 
 class Post(db.Model):

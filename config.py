@@ -19,4 +19,5 @@ class Config(object):
 	# MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
 
 	POSTS_PER_PAGE = 3
+	UNITS_PER_PAGE = 3
 

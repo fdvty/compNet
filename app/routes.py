@@ -1,18 +1,17 @@
 from flask import render_template, flash, redirect, url_for
 from app import app
-from app.forms import LoginForm
+from app.forms import LoginForm, PostForm, UnitForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User
+from app.models import User, Post, Unit
 from werkzeug.urls import url_parse
 from flask import request
 from app.forms import RegistrationForm, EditProfileForm
 from app import db
 from datetime import datetime
-from app.forms import PostForm
-from app.models import Post
 from app.forms import ResetPasswordRequestForm
 from app.email import send_password_reset_email
 from app.forms import ResetPasswordForm
+from app.utils import redirect_back
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -37,6 +36,68 @@ def index():
 						   posts=posts.items, next_url=next_url,
                                prev_url=prev_url)
 
+@app.route('/unit/add', methods=['GET', 'POST'])
+@login_required
+def unit_add():
+    form = UnitForm();
+    if form.validate_on_submit():
+        unit = Unit(name=form.name.data, comment=form.comment.data,
+                    age=form.age.data, owner=current_user)
+        db.session.add(unit)
+        db.session.commit()
+        flash('Your unit is now live!', category='info')
+        return redirect(url_for('unit_add'))
+    page = request.args.get('page', 1, type=int)
+    pagination = Unit.query.order_by(Unit.timestamp.desc()).paginate(
+        page, app.config['UNITS_PER_PAGE'], False)
+    units = pagination.items
+    return render_template('add_unit.html', title='Add Unit', form=form,
+                           units=units, pagination=pagination)
+
+@app.route('/unit/manage')
+@login_required
+def unit_manage():
+    page = request.args.get('page', 1, type=int)
+    pagination = Unit.query.order_by(Unit.timestamp.desc()).paginate(
+        page, app.config['UNITS_PER_PAGE'], False)
+    units = pagination.items
+    return render_template('manage_unit.html', page=page, pagination=pagination, units=units)
+
+@app.route('/unit/delete/<int:unit_id>', methods=['POST'])
+@login_required
+def unit_delete(unit_id):
+    unit = Unit.query.get(unit_id)
+    if(current_user != unit.owner):
+        flash('Permission Denied.', 'warning')
+        return redirect_back()
+    db.session.delete(unit)
+    db.session.commit()
+    flash('Unit deleted.', 'success')
+    return redirect_back()
+
+@app.route('/unit/edit/<int:unit_id>', methods=['GET', 'POST'])
+@login_required
+def unit_edit(unit_id):
+    unit = Unit.query.get(unit_id)
+    if(current_user != unit.owner):
+        flash('Permission Denied.', 'warning')
+        return redirect_back()
+    form = UnitForm()
+    if form.validate_on_submit():
+        unit.name = form.name.data
+        unit.age = form.age.data
+        unit.comment = form.comment.data
+        db.session.commit()
+        flash('Your changes have been saved.', category='info')
+        return redirect_back()
+    elif request.method == 'GET':  # 这里要区分第一次请求表格的情况
+        form.name.data = unit.name
+        form.age.data = unit.age
+        form.comment.data = unit.comment
+    return render_template('edit_unit.html', title='Edit Unit', form=form)  # 和POST表格后出错的情况
+
+
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -46,7 +107,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password', category='error')
+            flash('Invalid username or password', category='warning')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
@@ -120,10 +181,10 @@ def edit_profile():
 def follow(username):
     user = User.query.filter_by(username=username).first()
     if user is None:
-        flash('User {} not found.'.format(username), category='error')
+        flash('User {} not found.'.format(username), category='warning')
         return redirect(url_for('index'))
     if user == current_user:
-        flash('You cannot follow yourself!', category='error')
+        flash('You cannot follow yourself!', category='warning')
         return redirect(url_for('user', username=username))
     current_user.follow(user)
     db.session.commit()
@@ -136,10 +197,10 @@ def follow(username):
 def unfollow(username):
     user = User.query.filter_by(username=username).first()
     if user is None:
-        flash('User {} not found.'.format(username), category='error')
+        flash('User {} not found.'.format(username), category='warning')
         return redirect(url_for('index'))
     if user == current_user:
-        flash('You cannot unfollow yourself!', category='error')
+        flash('You cannot unfollow yourself!', category='warning')
         return redirect(url_for('user', username=username))
     current_user.unfollow(user)
     db.session.commit()
@@ -172,7 +233,7 @@ def reset_password_request():
             send_password_reset_email(user)
             flash('Check your email for the instructions to reset your password', category='info')
         else:
-            flash('This mail has not been registered', category='error')
+            flash('This mail has not been registered', category='warning')
         return redirect(url_for('login'))
     return render_template('reset_password_request.html',
                            title='Reset Password', form=form)
