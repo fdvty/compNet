@@ -1,0 +1,14 @@
+Flask-Bootstrap
+Flask-CKEditor
+Flask-DebugToolbar
+Flask-Login
+Flask-Mail
+Flask-Migrate
+Flask-Moment
+Flask-SQLAlchemy
+Flask-WTF
+Jinja2
+PyJWT
+SQLAlchemy
+Werkzeug
+Whoosh
