@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, jsonify
 from app import app
 from app.forms import LoginForm, PostForm, UnitForm
 from flask_login import current_user, login_user, logout_user, login_required
@@ -49,19 +49,24 @@ def unit_add():
         return redirect(url_for('unit_add'))
     page = request.args.get('page', 1, type=int)
     pagination = Unit.query.order_by(Unit.timestamp.desc()).paginate(
-        page, app.config['UNITS_PER_PAGE'], False)
+        page, app.config['UNITS_PER_PAGE_ADD'], False)
     units = pagination.items
     return render_template('add_unit.html', title='Add Unit', form=form,
                            units=units, pagination=pagination)
 
+
 @app.route('/unit/manage')
 @login_required
 def unit_manage():
+    q = request.args.get('q', '').strip()
     page = request.args.get('page', 1, type=int)
-    pagination = Unit.query.order_by(Unit.timestamp.desc()).paginate(
-        page, app.config['UNITS_PER_PAGE'], False)
+    if q == '':
+        pagination = Unit.query.order_by(Unit.timestamp.desc()).paginate(page, app.config['UNITS_PER_PAGE'], False)
+    else:
+        pagination = Unit.query.whooshee_search(q).order_by(Unit.timestamp.desc()).paginate(page, app.config['UNITS_PER_PAGE'], False)
     units = pagination.items
-    return render_template('manage_unit.html', page=page, pagination=pagination, units=units)
+    # return jsonify(units)
+    return render_template('manage_unit.html', page=page, pagination=pagination, units=units, junits=jsonify(units))
 
 @app.route('/unit/delete/<int:unit_id>', methods=['POST'])
 @login_required

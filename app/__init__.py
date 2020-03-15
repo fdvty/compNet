@@ -7,6 +7,7 @@ from flask_mail import Mail
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_wtf.csrf import CSRFProtect
+from flask_whooshee import Whooshee
 
 import logging
 from logging.handlers import SMTPHandler
@@ -23,6 +24,8 @@ login = LoginManager(app)
 login.login_view = 'login'
 bootstrap = Bootstrap(app)
 moment = Moment(app)
+whooshee = Whooshee()
+whooshee.init_app(app)
 
 mail = Mail(app)
 

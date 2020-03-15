@@ -1,13 +1,12 @@
 from datetime import datetime
-from app import db
+from app import db, app, whooshee
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from app import login
 from hashlib import md5
 from time import time
 import jwt
-from app import app
-
+from dataclasses import dataclass
 
 followers = db.Table('followers',
     db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
@@ -79,17 +78,25 @@ class User(UserMixin, db.Model):
 			return
 		return User.query.get(id)
 
-
+@dataclass
+@whooshee.register_model('name', 'comment')
 class Unit(db.Model):
+	id: int
+	name: str
+	age: int
+	timestamp: datetime
+	comment: str
+
 	id = db.Column(db.Integer, primary_key=True)
-	comment = db.Column(db.String(140))
-	age = db.Column(db.Integer)
 	name = db.Column(db.String(40))
+	age = db.Column(db.Integer)
 	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+	comment = db.Column(db.String(140))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 	def __repr__(self):
 		return '<Item {}>'.format(self.comment)
+
 
 
 class Post(db.Model):

@@ -4,6 +4,7 @@
 
 {% block app_content %}
     <h1>Hi, {{ current_user.username }}!</h1>
+    <br>
     {% if form %}
     {{ wtf.quick_form(form) }}
     <br>
