@@ -72,7 +72,7 @@ def unit_manage():
 @login_required
 def unit_delete(unit_id):
     unit = Unit.query.get(unit_id)
-    if(current_user != unit.owner):
+    if(current_user != unit.owner and current_user.can('ADMINISTER') == False):
         flash('Permission Denied.', 'warning')
         return redirect_back()
     db.session.delete(unit)
@@ -84,7 +84,7 @@ def unit_delete(unit_id):
 @login_required
 def unit_edit(unit_id):
     unit = Unit.query.get(unit_id)
-    if(current_user != unit.owner):
+    if(current_user != unit.owner and current_user.can('ADMINISTER') == False):
         flash('Permission Denied.', 'warning')
         return redirect_back()
     form = UnitForm()
@@ -92,6 +92,7 @@ def unit_edit(unit_id):
         unit.name = form.name.data
         unit.age = form.age.data
         unit.comment = form.comment.data
+        unit.timestamp = datetime.utcnow()
         db.session.commit()
         flash('Your changes have been saved.', category='info')
         return redirect_back()

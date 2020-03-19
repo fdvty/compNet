@@ -7,6 +7,7 @@ from hashlib import md5
 from time import time
 import jwt
 from dataclasses import dataclass
+from flask import current_app
 
 followers = db.Table('followers',
     db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
@@ -31,6 +32,12 @@ class User(UserMixin, db.Model):
 		lazy='dynamic'
 	)
 
+	role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
+	role = db.relationship('Role', back_populates='users')
+
+	def __init__(self):
+		self.set_role()
+
 	def follow(self, user):
 		if not self.is_following(user):
 			self.followed.append(user)
@@ -46,11 +53,24 @@ class User(UserMixin, db.Model):
 	def __repr__(self):
 		return '<User {}>'.format(self.username)
 
+	def can(self, permission_name):
+		permission = Permission.query.filter_by(name=permission_name).first()
+		return permission is not None and self.role is not None and \
+			   permission in self.role.permissions
+
 	def set_password(self, password):
 		self.password_hash = generate_password_hash(password)
 
 	def check_password(self, password):
 		return check_password_hash(self.password_hash, password)
+
+	def set_role(self):
+		if self.role is None:
+			if self.email == current_app.config['ADMIN_EMAIL']:
+				self.role = Role.query.filter_by(name='Administrator').first()
+			else:
+				self.role = Role.query.filter_by(name='User').first()
+			db.session.commit()
 
 	def avatar(self, size):
 		digest = md5(self.email.lower().encode('utf-8')).hexdigest()
@@ -111,3 +131,49 @@ class Post(db.Model):
 @login.user_loader
 def load_user(id):
 	return User.query.get(int(id))
+
+roles_permissions = db.Table('roles_permissions',
+                             db.Column('role_id', db.Integer, db.ForeignKey('role.id')),
+                             db.Column('permission_id', db.Integer, db.ForeignKey('permission.id'))
+                             )
+
+
+class Role(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(30), unique=True)
+	users = db.relationship('User', back_populates='role')
+	permissions = db.relationship('Permission', secondary=roles_permissions, back_populates='roles')
+
+	def __repr__(self):
+		return 'Role {}'.format(self.name)
+
+	@staticmethod
+	def init_role():
+		roles_permissions_map = {
+			'Locked': ['POST', 'EDIT'],
+			'User': ['POST', 'EDIT', 'DELETE'],
+			'Administrator': ['POST', 'EDIT', 'DELETE', 'ADMINISTER']
+		}
+
+		for role_name in roles_permissions_map:
+			role = Role.query.filter_by(name=role_name).first()
+			if role is None:
+				role = Role(name=role_name)
+				db.session.add(role)
+			role.permissions = []
+			for permission_name in roles_permissions_map[role_name]:
+				permission = Permission.query.filter_by(name=permission_name).first()
+				if permission is None:
+					permission = Permission(name=permission_name)
+					db.session.add(permission)
+				role.permissions.append(permission)
+		db.session.commit()
+
+
+class Permission(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(30), unique=True)
+	roles = db.relationship('Role', secondary=roles_permissions, back_populates='permissions')
+
+	def __repr__(self):
+		return 'Permission {}'.format(self.name)

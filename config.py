@@ -23,3 +23,5 @@ class Config(object):
 	UNITS_PER_PAGE_ADD = 3
 
 	WHOOSHEE_MIN_STRING_LEN = 1
+
+	ADMIN_EMAIL = "zirui.liu@pku.edu.cn"
