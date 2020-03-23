@@ -1,17 +1,15 @@
 from flask import render_template, flash, redirect, url_for, jsonify
-from app import app
+from app import app, avatars, db
 from app.forms import LoginForm, PostForm, UnitForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Post, Unit
+from app.models import User, Post, Unit, Record
 from werkzeug.urls import url_parse
-from flask import request
-from app.forms import RegistrationForm, EditProfileForm
-from app import db
+from flask import request, send_from_directory
+from app.forms import RegistrationForm, EditProfileForm, RecordForm, ResetPasswordForm, ResetPasswordRequestForm
 from datetime import datetime
-from app.forms import ResetPasswordRequestForm
 from app.email import send_password_reset_email
-from app.forms import ResetPasswordForm
-from app.utils import redirect_back
+from app.utils import redirect_back, flash_errors
+from app.forms import UploadAvatarForm, CropAvatarForm
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -35,6 +33,39 @@ def index():
 	return render_template('index.html', title='Home', form=form,
 						   posts=posts.items, next_url=next_url,
                                prev_url=prev_url)
+
+
+@app.route('/record/show/<int:unit_id>', methods=['GET', 'POST'])
+@login_required
+def show_records(unit_id):
+    unit = Unit.query.get(unit_id)
+    form = RecordForm()
+    if form.validate_on_submit():
+        record = Record(body=form.body.data, owner=unit, author=current_user)
+        db.session.add(record)
+        db.session.commit()
+        flash('Your record is now live!', category='info')
+        return redirect(url_for('show_records', unit_id=unit.id))
+    page = request.args.get('page', 1, type=int)
+    pagination = unit.records.order_by(Record.timestamp.desc()).paginate(page, app.config['UNITS_PER_PAGE'], False)
+    records = pagination.items
+    if unit.owner == current_user or current_user.can('ADMINISTER') == True:
+        return render_template('record.html', page=page, pagination=pagination, records=records, form=form, unit=unit)
+    else:
+        return render_template('record.html', page=page, pagination=pagination, records=records, unit=unit)
+
+@app.route('/record/delete/<int:record_id>', methods=['POST'])
+@login_required
+def delete_record(record_id):
+    record = Record.query.get(record_id)
+    if(current_user != record.author and current_user.can('ADMINISTER') == False):
+        flash('Permission Denied.', 'warning')
+        return redirect_back()
+    db.session.delete(record)
+    db.session.commit()
+    flash('Record deleted.', 'success')
+    return redirect_back()
+
 
 @app.route('/unit/add', methods=['GET', 'POST'])
 @login_required
@@ -68,7 +99,7 @@ def unit_manage():
     # return jsonify(units)
     return render_template('manage_unit.html', page=page, pagination=pagination, units=units, junits=jsonify(units))
 
-@app.route('/unit/delete/<int:unit_id>', methods=['POST'])
+@app.route('/unit/<int:unit_id>/delete', methods=['POST'])
 @login_required
 def unit_delete(unit_id):
     unit = Unit.query.get(unit_id)
@@ -80,7 +111,7 @@ def unit_delete(unit_id):
     flash('Unit deleted.', 'success')
     return redirect_back()
 
-@app.route('/unit/edit/<int:unit_id>', methods=['GET', 'POST'])
+@app.route('/unit/<int:unit_id>/edit', methods=['GET', 'POST'])
 @login_required
 def unit_edit(unit_id):
     unit = Unit.query.get(unit_id)
@@ -104,6 +135,57 @@ def unit_edit(unit_id):
 
 
 
+@app.route('/unit/<int:unit_id>/settings/avatar')
+@login_required
+def change_avatar(unit_id):
+    unit = Unit.query.get(unit_id)
+    if (current_user != unit.owner and current_user.can('ADMINISTER') == False):
+        flash('Permission Denied.', 'warning')
+        return redirect_back()
+    upload_form = UploadAvatarForm()
+    crop_form = CropAvatarForm()
+    return render_template('change_avatar.html', upload_form=upload_form, crop_form=crop_form, unit=unit)
+
+
+@app.route('/unit/<int:unit_id>/settings/avatar/upload', methods=['POST'])
+@login_required
+def upload_avatar(unit_id):
+    unit = Unit.query.get(unit_id)
+    form = UploadAvatarForm()
+    if form.validate_on_submit():
+        image = form.image.data
+        filename = avatars.save_avatar(image)
+        unit.avatar_raw = filename
+        db.session.commit()
+        flash('Image uploaded, please crop.', 'success')
+    flash_errors(form)
+    return redirect(url_for('change_avatar', unit_id=unit.id))
+
+
+@app.route('/unit/<int:unit_id>/settings/avatar/crop', methods=['POST'])
+@login_required
+def crop_avatar(unit_id):
+    unit = Unit.query.get(unit_id)
+    form = CropAvatarForm()
+    if form.validate_on_submit():
+        x = form.x.data
+        y = form.y.data
+        w = form.w.data
+        h = form.h.data
+        filenames = avatars.crop_avatar(unit.avatar_raw, x, y, w, h)
+        unit.avatar_s = filenames[0]
+        unit.avatar_m = filenames[1]
+        unit.avatar_l = filenames[2]
+        db.session.commit()
+        flash('Avatar updated.', 'success')
+        return redirect(url_for('show_records', unit_id=unit.id))
+    flash_errors(form)
+    return redirect(url_for('change_avatar', unit_id=unit.id))
+
+
+@app.route('/avatars/<path:filename>')
+def get_avatar(filename):
+    return send_from_directory(app.config['AVATARS_SAVE_PATH'], filename)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

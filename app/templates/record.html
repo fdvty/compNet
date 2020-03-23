@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+
+{% block app_content %}
+
+    <table class="table table-hover">
+        <tr>
+            <td width="70px">
+                <a href="{{ url_for('user', username=unit.owner.username) }}">
+                    <img src="{{ unit.avatar(150) }}" />
+                </a>
+            </td>
+            <td>
+                <h1>
+                    {{ unit.name }}
+                </h1>
+                    &nbsp {{ unit.age }} years old
+                <br>
+                    &nbsp {{ unit.comment }}
+                <br>
+                <br>
+                <a class="btn btn-link btn-sm" href="{{ url_for('change_avatar', unit_id=unit.id, next=request.full_path) }}">Change Avatar</a>
+            </td>
+        </tr>
+    </table>
+
+
+
+    <br>
+    {% if form %}
+    {{ wtf.quick_form(form) }}
+    <br>
+    {% endif %}
+
+    {% if records %}
+        {% for record in records %}
+            {% include '_record.html' %}
+        {% endfor %}
+        <div class="page-footer">{{ render_pagination(pagination) }}</div>
+    {% else %}
+        <div class="tip"><h5>No Records.</h5></div>
+    {% endif %}
+{% endblock %}

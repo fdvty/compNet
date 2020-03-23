@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_bootstrap import Bootstrap
+from flask_avatars import Avatars
 from flask_moment import Moment
 from flask_wtf.csrf import CSRFProtect
 from flask_whooshee import Whooshee
@@ -26,6 +27,7 @@ bootstrap = Bootstrap(app)
 moment = Moment(app)
 whooshee = Whooshee()
 whooshee.init_app(app)
+avatars = Avatars(app)
 
 mail = Mail(app)
 

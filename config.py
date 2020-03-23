@@ -25,3 +25,5 @@ class Config(object):
 	WHOOSHEE_MIN_STRING_LEN = 1
 
 	ADMIN_EMAIL = "zirui.liu@pku.edu.cn"
+
+	AVATARS_SAVE_PATH = '/Users/apple/microblog/app/'+'static/images/avatars'

@@ -3,7 +3,7 @@ try:
 except ImportError:
     from urllib.parse import urlparse, urljoin
 
-from flask import request, redirect, url_for, current_app
+from flask import request, redirect, url_for, current_app, flash
 from app.models import User, Role, Permission
 from app import db
 
@@ -30,3 +30,11 @@ def init_role_permission():
                 user.role = Role.query.filter_by(name='User').first()
         db.session.add(user)
     db.session.commit()
+
+def flash_errors(form):
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(u"Error in the %s field - %s" % (
+                getattr(form, field).label.text,
+                error
+            ))

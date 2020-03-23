@@ -7,7 +7,9 @@ from hashlib import md5
 from time import time
 import jwt
 from dataclasses import dataclass
-from flask import current_app
+from flask import current_app, redirect, url_for
+
+import os
 
 followers = db.Table('followers',
     db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
@@ -23,6 +25,7 @@ class User(UserMixin, db.Model):
 	last_seen = db.Column(db.DateTime, default=datetime.utcnow)
 	posts = db.relationship('Post', backref='author', lazy='dynamic')
 	units = db.relationship('Unit', backref='owner', lazy='dynamic')
+	records = db.relationship('Record', backref='author', lazy='dynamic')
 
 	followed = db.relationship(
 		'User', secondary=followers,
@@ -113,9 +116,36 @@ class Unit(db.Model):
 	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 	comment = db.Column(db.String(140))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	records = db.relationship('Record', backref='owner', lazy='dynamic')
+	avatar_raw = db.Column(db.String(64))
+	avatar_s= db.Column(db.String(64))
+	avatar_m = db.Column(db.String(64))
+	avatar_l = db.Column(db.String(64))
 
 	def __repr__(self):
 		return '<Item {}>'.format(self.comment)
+
+	def avatar(self, size):
+		if self.avatar_l != None:
+			if size < 70:
+				filename = self.avatar_s
+			else:
+				filename = self.avatar_l
+			return url_for('get_avatar', filename=filename)
+		digest = md5(self.name.lower().encode('utf-8')).hexdigest()
+		return 'https://www.gravatar.com/avatar/{}?d=wavatar&s={}'.format(
+			digest, size)
+
+
+class Record(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	body = db.Column(db.String(140))
+	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+	unit_id = db.Column(db.Integer, db.ForeignKey('unit.id'))
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+	def __repr__(self):
+		return '<Record {}>'.format(self.body)
 
 
 

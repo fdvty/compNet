@@ -1,0 +1,23 @@
+
+    <table class="table table-hover">
+        <tr>
+            <td width="70px">
+                <img src="{{ record.author.avatar(70) }}" />
+                <br>
+                <form style="display: inline" class="inline" method="post" action="{{ url_for('delete_record', record_id=record.id, next=request.full_path) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <button type="submit" class="btn btn-link btn-sm" onclick="return confirm('Are you sure?');">&nbsp Delete</button>
+                </form>
+            </td>
+            <td>
+                <a href="{{ url_for('user', username=record.author.username) }}">
+                    {{ record.author.username }}
+                </a>
+                added at {{ moment(record.timestamp).fromNow() }}:
+                <br>
+                <br>
+                {{ record.body }}
+                <br>
+            </td>
+        </tr>
+    </table>

@@ -3,16 +3,18 @@
         <tr>
             <td width="70px">
                 <a href="{{ url_for('user', username=unit.owner.username) }}">
-                    <img src="{{ unit.owner.avatar(70) }}" />
+                    <img src="{{ unit.avatar(150) }}" />
                 </a>
             </td>
             <td>
                 <a href="{{ url_for('user', username=unit.owner.username) }}">
                     {{ unit.owner.username }}
                 </a>
-                post {{ moment(unit.timestamp).fromNow() }}:
+                added {{ moment(unit.timestamp).fromNow() }}:
                 <br>
-                {{ unit.name }}
+                <a href="{{ url_for('show_records', unit_id=unit.id) }}">
+                    {{ unit.name }}
+                </a>
                 <br>
                 {{ unit.age }} years old
                 <br>
