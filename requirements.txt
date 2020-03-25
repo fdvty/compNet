@@ -5,6 +5,7 @@ Click==7.0
 dominate==2.4.0
 elasticsearch==7.5.1
 Flask==1.1.1
+Flask-Avatars==0.2.2
 Flask-Bootstrap==3.3.7.1
 Flask-CKEditor==0.4.3
 Flask-DebugToolbar==0.11.0
@@ -21,6 +22,7 @@ Jinja2==2.11.1
 Mako==1.1.1
 MarkupSafe==1.1.1
 pathtools==0.1.2
+Pillow==7.0.0
 PyJWT==1.7.1
 python-dateutil==2.8.1
 python-dotenv==0.11.0
