@@ -11,11 +11,6 @@ from flask import current_app, redirect, url_for
 
 import os
 
-followers = db.Table('followers',
-    db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
-    db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
-)
-
 class User(UserMixin, db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(64), index=True, unique=True)
@@ -23,35 +18,14 @@ class User(UserMixin, db.Model):
 	password_hash = db.Column(db.String(128))
 	about_me = db.Column(db.String(140))
 	last_seen = db.Column(db.DateTime, default=datetime.utcnow)
-	posts = db.relationship('Post', backref='author', lazy='dynamic')
 	units = db.relationship('Unit', backref='owner', lazy='dynamic')
 	records = db.relationship('Record', backref='author', lazy='dynamic')
-
-	followed = db.relationship(
-		'User', secondary=followers,
-		primaryjoin=(followers.c.follower_id == id),
-		secondaryjoin=(followers.c.followed_id == id),
-		backref=db.backref('followers', lazy='dynamic'),
-		lazy='dynamic'
-	)
 
 	role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
 	role = db.relationship('Role', back_populates='users')
 
 	def __init__(self):
 		self.set_role()
-
-	def follow(self, user):
-		if not self.is_following(user):
-			self.followed.append(user)
-
-	def unfollow(self, user):
-		if self.is_following(user):
-			self.followed.remove(user)
-
-	def is_following(self, user):
-		return self.followed.filter(
-			followers.c.followed_id == user.id).count() > 0
 
 	def __repr__(self):
 		return '<User {}>'.format(self.username)
@@ -80,13 +54,6 @@ class User(UserMixin, db.Model):
 		return 'https://www.gravatar.com/avatar/{}?d=robohash&s={}'.format(
 			digest, size)
 
-	def followed_posts(self):
-		followed = Post.query.join(
-			followers, (followers.c.followed_id == Post.user_id)).filter(
-			followers.c.follower_id == self.id)
-		own = Post.query.filter_by(user_id=self.id)
-		return followed.union(own).order_by(Post.timestamp.desc())
-
 	def get_reset_password_token(self, expires_in=600):
 		return jwt.encode(
 			{'reset_password': self.id, 'exp': time() + expires_in},
@@ -102,7 +69,7 @@ class User(UserMixin, db.Model):
 		return User.query.get(id)
 
 @dataclass
-@whooshee.register_model('name', 'comment')
+@whooshee.register_model('name')
 class Unit(db.Model):
 	id: int
 	name: str
@@ -148,16 +115,6 @@ class Record(db.Model):
 		return '<Record {}>'.format(self.body)
 
 
-
-class Post(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	body = db.Column(db.String(140))
-	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-	def __repr__(self):
-		return '<Post {}>'.format(self.body)
-
 @login.user_loader
 def load_user(id):
 	return User.query.get(int(id))
@@ -184,7 +141,6 @@ class Role(db.Model):
 			'User': ['POST', 'EDIT', 'DELETE'],
 			'Administrator': ['POST', 'EDIT', 'DELETE', 'ADMINISTER']
 		}
-
 		for role_name in roles_permissions_map:
 			role = Role.query.filter_by(name=role_name).first()
 			if role is None:

@@ -18,7 +18,6 @@ class Config(object):
 	MAIL_DEFAULT_SENDER = ('MicroBlog', os.getenv('MAIL_USERNAME'))
 	# MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
 
-	POSTS_PER_PAGE = 10
 	UNITS_PER_PAGE = 10
 	UNITS_PER_PAGE_ADD = 3
 

@@ -2,7 +2,7 @@
     <table class="table table-hover">
         <tr>
             <td width="70px">
-                <a href="{{ url_for('user', username=unit.owner.username) }}">
+                <a href="{{ url_for('show_records', unit_id=unit.id) }}">
                     <img src="{{ unit.avatar(150) }}" />
                 </a>
             </td>
