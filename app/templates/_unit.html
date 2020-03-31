@@ -2,8 +2,8 @@
     <table class="table table-hover">
         <tr>
             <td width="70px">
-                <a href="{{ url_for('show_records', unit_id=unit.id) }}">
-                    <img src="{{ unit.avatar(150) }}" />
+                <a href="{{ url_for('patient_profile', unit_id=unit.id) }}">
+                    <img src="{{ unit.avatar(60) }}" />
                 </a>
             </td>
             <td>
@@ -12,8 +12,8 @@
                 </a>
                 added {{ moment(unit.timestamp).fromNow() }}:
                 <br>
-                <a href="{{ url_for('show_records', unit_id=unit.id) }}">
-                    {{ unit.name }}
+                <a href="{{ url_for('patient_profile', unit_id=unit.id) }}">
+                    <b>{{ unit.name }}</b>
                 </a>
                 <br>
                 {{ unit.age }} years old

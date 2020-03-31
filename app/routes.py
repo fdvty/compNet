@@ -1,15 +1,13 @@
-from flask import render_template, flash, redirect, url_for, jsonify
+from flask import render_template, flash, redirect, url_for, jsonify, request, send_from_directory
 from app import app, avatars, db
-from app.forms import LoginForm, UnitForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Unit, Record
-from werkzeug.urls import url_parse
-from flask import request, send_from_directory
-from app.forms import RegistrationForm, EditProfileForm, RecordForm, ResetPasswordForm, ResetPasswordRequestForm
-from datetime import datetime
 from app.email import send_password_reset_email
-from app.utils import redirect_back, flash_errors
-from app.forms import UploadAvatarForm, CropAvatarForm
+from app.utils import redirect_back, flash_errors, delete_avatar
+from app.forms import LoginForm, UnitForm, RegistrationForm, EditProfileForm, RecordForm, \
+    ResetPasswordForm, ResetPasswordRequestForm, UploadAvatarForm, CropAvatarForm, AddRecordForm
+from datetime import datetime
+from werkzeug.urls import url_parse
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -18,9 +16,9 @@ def index():
 	return redirect(url_for('unit_manage'))
 
 
-@app.route('/record/show/<int:unit_id>', methods=['GET', 'POST'])
+@app.route('/patient_profile/<int:unit_id>', methods=['GET', 'POST'])
 @login_required
-def show_records(unit_id):
+def patient_profile(unit_id):
     unit = Unit.query.get(unit_id)
     form = RecordForm()
     if form.validate_on_submit():
@@ -28,18 +26,52 @@ def show_records(unit_id):
         db.session.add(record)
         db.session.commit()
         flash('Your record is now live!', category='info')
-        return redirect(url_for('show_records', unit_id=unit.id))
+        return redirect(url_for('patient_profile', unit_id=unit.id))
     page = request.args.get('page', 1, type=int)
     pagination = unit.records.order_by(Record.timestamp.desc()).paginate(page, app.config['UNITS_PER_PAGE'], False)
     records = pagination.items
     if unit.owner == current_user or current_user.can('ADMINISTER') == True:
-        return render_template('record.html', page=page, pagination=pagination, records=records, form=form, unit=unit)
+        return render_template('patient_profile.html', page=page, pagination=pagination, records=records, form=form, unit=unit)
     else:
-        return render_template('record.html', page=page, pagination=pagination, records=records, unit=unit)
+        return render_template('patient_profile.html', page=page, pagination=pagination, records=records, unit=unit)
 
-@app.route('/record/delete/<int:record_id>', methods=['POST'])
+
+@app.route('/record/manage')
 @login_required
-def delete_record(record_id):
+def record_manage():
+    q = request.args.get('q', '').strip()
+    page = request.args.get('page', 1, type=int)
+    if q == '':
+        pagination = Record.query.order_by(Record.timestamp.desc()).paginate(page, app.config['RECORDS_PER_PAGE'], False)
+    else:
+        pagination = Record.query.whooshee_search(q).order_by(Record.timestamp.desc()).paginate(page, app.config['RECORDS_PER_PAGE'], False)
+    records = pagination.items
+    # return jsonify(units)
+    return render_template('manage_record.html', page=page, pagination=pagination, records=records)
+
+
+@app.route('/record/add', methods=['GET', 'POST'])
+@login_required
+def record_add():
+    form = AddRecordForm()
+    form.unit_id.choices = [(u.id, u.name) for u in Unit.query.order_by(Unit.timestamp.desc()).all()]
+    if form.validate_on_submit():
+        record = Record(body=form.body.data, owner=Unit.query.get(form.unit_id.data), author=current_user)
+        db.session.add(record)
+        db.session.commit()
+        flash('Your record is now live!', category='info')
+        return redirect_back()
+    page = request.args.get('page', 1, type=int)
+    pagination = Record.query.order_by(Record.timestamp.desc()).paginate(
+        page, app.config['RECORDS_PER_PAGE_ADD'], False)
+    records = pagination.items
+    return render_template('add_record.html', title='Add Record', form=form,
+                           records=records, pagination=pagination)
+
+
+@app.route('/record/<int:record_id>/delete', methods=['POST'])
+@login_required
+def record_delete(record_id):
     record = Record.query.get(record_id)
     if(current_user != record.author and current_user.can('ADMINISTER') == False):
         flash('Permission Denied.', 'warning')
@@ -48,6 +80,25 @@ def delete_record(record_id):
     db.session.commit()
     flash('Record deleted.', 'success')
     return redirect_back()
+
+@app.route('/record/<int:record_id>/edit', methods=['GET', 'POST'])
+@login_required
+def record_edit(record_id):
+    record = Record.query.get(record_id)
+    if(current_user != record.author and current_user.can('ADMINISTER') == False):
+        flash('Permission Denied.', 'warning')
+        return redirect_back()
+    form = RecordForm()
+    if form.validate_on_submit():
+        record.body = form.body.data
+        record.timestamp = datetime.utcnow()
+        db.session.commit()
+        flash('Your changes have been saved.', category='info')
+        return redirect_back()
+    elif request.method == 'GET':  # 这里要区分第一次请求表格的情况
+        form.body.data = record.body
+    return render_template('edit_record.html', title='Edit Record', record=record, form=form)  # 和POST表格后出错的情况
+
 
 
 @app.route('/unit/add', methods=['GET', 'POST'])
@@ -60,7 +111,7 @@ def unit_add():
         db.session.add(unit)
         db.session.commit()
         flash('Your unit is now live!', category='info')
-        return redirect(url_for('unit_add'))
+        return redirect_back()
     page = request.args.get('page', 1, type=int)
     pagination = Unit.query.order_by(Unit.timestamp.desc()).paginate(
         page, app.config['UNITS_PER_PAGE_ADD'], False)
@@ -89,6 +140,8 @@ def unit_delete(unit_id):
     if(current_user != unit.owner and current_user.can('ADMINISTER') == False):
         flash('Permission Denied.', 'warning')
         return redirect_back()
+    for record in Record.query.filter_by(owner=unit).all():
+        db.session.delete(record)
     db.session.delete(unit)
     db.session.commit()
     flash('Unit deleted.', 'success')
@@ -138,6 +191,7 @@ def upload_avatar(unit_id):
     if form.validate_on_submit():
         image = form.image.data
         filename = avatars.save_avatar(image)
+        delete_avatar(unit.avatar_raw)
         unit.avatar_raw = filename
         db.session.commit()
         flash('Image uploaded, please crop.', 'success')
@@ -156,12 +210,15 @@ def crop_avatar(unit_id):
         w = form.w.data
         h = form.h.data
         filenames = avatars.crop_avatar(unit.avatar_raw, x, y, w, h)
+        delete_avatar(unit.avatar_s)
+        delete_avatar(unit.avatar_m)
+        delete_avatar(unit.avatar_l)
         unit.avatar_s = filenames[0]
         unit.avatar_m = filenames[1]
         unit.avatar_l = filenames[2]
         db.session.commit()
         flash('Avatar updated.', 'success')
-        return redirect(url_for('show_records', unit_id=unit.id))
+        return redirect(url_for('patient_profile', unit_id=unit.id))
     flash_errors(form)
     return redirect(url_for('change_avatar', unit_id=unit.id))
 

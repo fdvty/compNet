@@ -5,12 +5,14 @@
         <tr>
             <td width="256px"><img src="{{ user.avatar(256) }}"></td>
             <td>
-                <h1>User: {{ user.username }}</h1>
+                <h1>{% if user.can('ADMINISTER') %}Admin{% else %}User{% endif %}: {{ user.username }}</h1>
                 {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
                 {% if user.last_seen %}
-                <p>Last seen on: {{ moment(user.last_seen).format('LLL') }}</p>
+                    <p>Last seen on: {{ moment(user.last_seen).format('LLL') }}</p>
                 {% endif %}
-                <a class="btn btn-link btn-sm" href="{{ url_for('edit_profile', next=request.full_path) }}">Edit Profile</a>
+                {% if current_user == user %}
+                    <a href="{{ url_for('edit_profile', next=request.full_path) }}">Edit Profile</a>
+                {% endif %}
             </td>
         </tr>
     </table>

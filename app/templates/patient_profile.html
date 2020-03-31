@@ -19,9 +19,6 @@
                     &nbsp {{ unit.age }} years old
                 <br>
                     &nbsp {{ unit.comment }}
-                <br>
-                <br>
-                <a class="btn btn-link btn-sm" href="{{ url_for('change_avatar', unit_id=unit.id, next=request.full_path) }}">Change Avatar</a>
             </td>
         </tr>
     </table>
@@ -35,6 +32,7 @@
     {% endif %}
 
     {% if records %}
+        <h3>Records</h3>
         {% for record in records %}
             {% include '_record.html' %}
         {% endfor %}

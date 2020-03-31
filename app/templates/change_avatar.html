@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from 'bootstrap/form.html' import render_form %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block title %}Change Avatar{% endblock %}
 
@@ -10,28 +10,20 @@
 
 
 {% block app_content %}
+    <h2 class="card-header">Change avatar for {{ unit.name }}!</h2>
+    <hr>
     <div class="card w-100 bg-light">
-        <h3 class="card-header">Change avatar for {{ unit.name }}!</h3>
         <div class="card-body">
-            {{ render_form(upload_form, action=url_for('upload_avatar', unit_id=unit.id)) }}
+            {{ wtf.quick_form(upload_form, action=url_for('upload_avatar', unit_id=unit.id)) }}
             <small class="text-muted">
                 Your file's size must be less than 3 MB, the allowed formats are png and jpg.
             </small>
-        </div>
-        <div class="card-body">
+            <hr>
             {{ avatars.crop_box('get_avatar', unit.avatar_raw) }}
             {{ avatars.preview_box('get_avatar', unit.avatar_raw) }}
-        </div>
-        <div class="card-body">
-            {{ render_form(crop_form, action=url_for('crop_avatar', unit_id=unit.id)) }}
+            <hr>
+            {{ wtf.quick_form(crop_form, action=url_for('crop_avatar', unit_id=unit.id)) }}
         </div>
     </div>
 {% endblock %}
 
-{% block scripts %}
-    {{ super() }}
-<!--    <script src="{{ url_for('static', filename='jcrop/js/jquery.js') }}"></script>-->
-    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
-    <script src="{{ url_for('static', filename='jcrop/js/jquery.Jcrop.min.js') }}"></script>
-    {{ avatars.init_jcrop() }}
-{% endblock %}

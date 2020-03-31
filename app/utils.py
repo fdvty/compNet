@@ -6,6 +6,7 @@ except ImportError:
 from flask import request, redirect, url_for, current_app, flash
 from app.models import User, Role, Permission
 from app import db
+import os
 
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)
@@ -38,3 +39,15 @@ def flash_errors(form):
                 getattr(form, field).label.text,
                 error
             ))
+
+def delete_file(directory, filename):
+    file = os.path.join(directory, filename)
+    if os.path.exists(file):
+        os.remove(file)
+    else:
+        print("no such file:", file)
+
+def delete_avatar(filename):
+    if filename:
+        directory = current_app.config['AVATARS_SAVE_PATH']
+        delete_file(directory, filename)

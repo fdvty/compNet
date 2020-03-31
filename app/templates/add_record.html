@@ -3,21 +3,21 @@
 {% from 'bootstrap/pagination.html' import render_pagination %}
 
 {% block app_content %}
-    <h1>Add a new patient</h1>
+    <h1>Add a new record</h1>
     <br>
     {% if form %}
     {{ wtf.quick_form(form) }}
     <br>
     {% endif %}
 
-    <h3>Recent added patients</h3>
-    {% if units %}
-        {% for unit in units %}
-            {% include '_unit.html' %}
+    <h3>Recent added records</h3>
+    {% if records %}
+        {% for record in records %}
+            {% include '_record.html' %}
         {% endfor %}
         <div class="page-footer">{{ render_pagination(pagination) }}</div>
     {% else %}
-        <div class="tip"><h5>No units.</h5></div>
+        <div class="tip"><h5>No records.</h5></div>
     {% endif %}
 
 {% endblock %}

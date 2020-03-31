@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+
+{% block title %}Manage Records{% endblock %}
+
+{% block app_content %}
+<div class="page-header">
+    <h1>Records
+        <small class="text-muted">{{ pagination.total }}</small>
+        <div style="float:right;">
+            <a class="btn btn-primary btn-sm" href="{{ url_for('record_add', next=request.full_path) }}">Add Record</a>
+        </div>
+    </h1>
+</div>
+
+
+
+<form class="bs-example bs-example-form" role="form" action="{{ url_for('record_manage') }}">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="please enter content...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">Search!</button>
+                </span>
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+    </div><!-- /.row -->
+</form>
+
+
+
+<br>
+
+{% if records %}
+
+<table id = "table" class="table table-striped"  data-filter-control="true" data-show-clear="true">
+    <thead>
+    <tr>
+        <th data-field="id">No.</th>
+        <th data-field="avatar">Avatar</th>
+        <th data-field="patient" data-filter-control="input">Patient</th>
+        <th data-field="content" data-filter-control="input">Content</th>
+        <th data-field="user" data-filter-control="input">Added by</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    {% for record in records %}
+    <tr>
+        <td>{{ loop.index + ((page - 1) * config.UNITS_PER_PAGE) }}</td>
+        <td><img src="{{ record.owner.avatar(30) }}" /></td>
+        <td><a href="{{ url_for('patient_profile', unit_id=record.owner.id, next=request.full_path) }}">{{ record.owner.name }}</a></td>
+        <td>{{ record.body }}</td>
+        <td><a href="{{ url_for('user', username=record.author.username) }}">{{ record.author.username }}{% if record.author.can('ADMINISTER') %} (Admin){% endif %}</a></td>
+        {% if (record.author == current_user) or (current_user.can('ADMINISTER')) %}
+        <td>
+            <a class="btn btn-info btn-sm" href="{{ url_for('record_edit', record_id=record.id, next=request.full_path) }}">Edit</a>
+            <form style="display: inline" class="inline" method="post" action="{{ url_for('record_delete', record_id=record.id, next=request.full_path) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</button>
+            </form>
+        </td>
+        {% else %}
+        <td>
+            <button class="btn btn-info btn-sm disabled" >Edit</button>
+            <button class="btn btn-danger btn-sm disabled">Delete</button>
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+
+
+
+<div class="page-footer">{{ render_pagination(pagination) }}</div>
+{% else %}
+<div class="tip"><h5>No Records.</h5></div>
+{% endif %}
+{% endblock %}
+
+

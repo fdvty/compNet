@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField, HiddenField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField, HiddenField, SelectField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
-from app.models import User
+from app.models import User, Unit
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 
 class UploadAvatarForm(FlaskForm):
@@ -70,6 +70,14 @@ class UnitForm(FlaskForm):
 class RecordForm(FlaskForm):
     body = TextAreaField('Add Record', validators=[DataRequired(), Length(min=1, max=140)])
     submit = SubmitField('Submit')
+
+class AddRecordForm(FlaskForm):
+    choices = [(u.id, u.name) for u in Unit.query.order_by(Unit.timestamp.desc()).all()]
+    unit_id = SelectField('Patient', coerce=int)
+    body = TextAreaField('Record', validators=[DataRequired(), Length(min=1, max=140)])
+    submit = SubmitField('Submit')
+
+
 
 
 class ResetPasswordRequestForm(FlaskForm):

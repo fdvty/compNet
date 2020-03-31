@@ -7,9 +7,7 @@ from hashlib import md5
 from time import time
 import jwt
 from dataclasses import dataclass
-from flask import current_app, redirect, url_for
-
-import os
+from flask import current_app, url_for
 
 class User(UserMixin, db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -94,8 +92,10 @@ class Unit(db.Model):
 
 	def avatar(self, size):
 		if self.avatar_l != None:
-			if size < 70:
+			if size <= 30:
 				filename = self.avatar_s
+			elif size < 100:
+				filename = self.avatar_m
 			else:
 				filename = self.avatar_l
 			return url_for('get_avatar', filename=filename)
@@ -104,6 +104,7 @@ class Unit(db.Model):
 			digest, size)
 
 
+@whooshee.register_model('body')
 class Record(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	body = db.Column(db.String(140))
@@ -112,7 +113,7 @@ class Record(db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 	def __repr__(self):
-		return '<Record {}>'.format(self.body)
+		return '<Record {} {}>'.format(self.body, self.id)
 
 
 @login.user_loader
