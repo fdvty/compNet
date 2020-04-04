@@ -21,8 +21,10 @@ class User(UserMixin, db.Model):
 	role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
 	role = db.relationship('Role', back_populates='users')
 
-	def __init__(self):
+	def __init__(self, username, email):
 		self.set_role()
+		self.username = username
+		self.email = email
 
 	def __repr__(self):
 		return '<User {}>'.format(self.username)
