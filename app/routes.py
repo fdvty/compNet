@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, jsonify, request, send_from_directory
+from flask import render_template, flash, redirect, url_for, request, send_from_directory
 from app import app, avatars, db
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Unit, Record
@@ -130,8 +130,7 @@ def unit_manage():
     else:
         pagination = Unit.query.whooshee_search(q).order_by(Unit.timestamp.desc()).paginate(page, app.config['UNITS_PER_PAGE'], False)
     units = pagination.items
-    # return jsonify(units)
-    return render_template('manage_unit.html', page=page, pagination=pagination, units=units, junits=jsonify(units))
+    return render_template('manage_unit.html', page=page, pagination=pagination, units=units)
 
 @app.route('/unit/<int:unit_id>/delete', methods=['POST'])
 @login_required

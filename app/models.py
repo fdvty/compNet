@@ -6,7 +6,6 @@ from app import login
 from hashlib import md5
 from time import time
 import jwt
-from dataclasses import dataclass
 from flask import current_app, url_for
 
 class User(UserMixin, db.Model):
@@ -66,15 +65,9 @@ class User(UserMixin, db.Model):
 			return
 		return User.query.get(id)
 
-@dataclass
+
 @whooshee.register_model('name')
 class Unit(db.Model):
-	id: int
-	name: str
-	age: int
-	timestamp: datetime
-	comment: str
-
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(40))
 	age = db.Column(db.Integer)
