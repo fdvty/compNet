@@ -3,9 +3,26 @@
 
 {% block title %}Change Avatar{% endblock %}
 
-{% block head %}
+{% block styles %}
     {{ super() }}
     <link rel="stylesheet" href="{{ url_for('static', filename='jcrop/css/jquery.Jcrop.min.css') }}">
+    <style>
+    #preview-box {
+         display: block;
+         position: absolute;
+         top: 10px;
+         right: -280px;
+         padding: 6px;
+         border: 1px rgba(0, 0, 0, .4) solid;
+         background-color: white;
+         -webkit-border-radius: 6px;
+         -moz-border-radius: 6px;
+         border-radius: 6px;
+         -webkit-box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+         -moz-box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+         box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+    }
+    </style>
 {% endblock %}
 
 
@@ -14,16 +31,24 @@
     <hr>
     <div class="card w-100 bg-light">
         <div class="card-body">
-            {{ wtf.quick_form(upload_form, action=url_for('upload_avatar', unit_id=unit.id)) }}
+            {{ wtf.quick_form(upload_form, action=url_for('upload_avatar', unit_id=unit.id), button_map={'submit': 'info'}) }}
             <small class="text-muted">
+                <br>
                 Your file's size must be less than 3 MB, the allowed formats are png and jpg.
             </small>
             <hr>
             {{ avatars.crop_box('get_avatar', unit.avatar_raw) }}
             {{ avatars.preview_box('get_avatar', unit.avatar_raw) }}
             <hr>
-            {{ wtf.quick_form(crop_form, action=url_for('crop_avatar', unit_id=unit.id)) }}
+            {{ wtf.quick_form(crop_form, action=url_for('crop_avatar', unit_id=unit.id), button_map={'submit': 'primary'}) }}
         </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    {{super()}}
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    <script src="{{ url_for('static', filename='jcrop/js/jquery.Jcrop.min.js') }}"></script>
+    {{ avatars.init_jcrop() }}
 {% endblock %}
 

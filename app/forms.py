@@ -5,11 +5,11 @@ from app.models import User, Unit
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 
 class UploadAvatarForm(FlaskForm):
-    image = FileField('Upload', validators=[
+    image = FileField(label='Upload Image', validators=[
         FileRequired(),
         FileAllowed(['jpg', 'png'], 'The file format should be .jpg or .png.')
     ])
-    submit = SubmitField()
+    submit = SubmitField(label='Upload')
 
 
 class CropAvatarForm(FlaskForm):

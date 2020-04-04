@@ -11,9 +11,8 @@ from werkzeug.urls import url_parse
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
-@login_required
 def index():
-	return redirect(url_for('unit_manage'))
+    return render_template('home.html')
 
 
 @app.route('/patient_profile/<int:unit_id>', methods=['GET', 'POST'])
