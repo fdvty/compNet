@@ -4,6 +4,30 @@
 
 {% block app_content %}
 
+    {% if form %}
+        <div class="modal fade" id="addRecord" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            Add Clinical Record for {{ unit.name }}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        {{ wtf.quick_form(form) }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    {% endif %}
+
     <table class="table table-hover">
         <tr>
             <td width="70px">
@@ -23,21 +47,73 @@
         </tr>
     </table>
 
-
-
-    <br>
-    {% if form %}
-    {{ wtf.quick_form(form) }}
-    <br>
-    {% endif %}
+<!--<br>-->
+    <div class="page-header">
+        <h3>Records
+            {% if form %}
+            <div style="float:right;">
+                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addRecord">New Record</button>
+            </div>
+            {% endif %}
+        </h3>
+    </div>
 
     {% if records %}
-        <h3>Records</h3>
         {% for record in records %}
-            {% include '_record.html' %}
+            <div class="modal fade" id="myModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                            </button>
+                            <h3 class="modal-title" id="myModalLabel"><img src="{{ record.owner.avatar(70) }}" /> {{ record.owner.name }}'s Clinical Record </h3>
+                        </div>
+                        <div class="modal-body">
+                            <b>Abstract:</b><div align="left">{{ record.body }}</div>
+                            <b>Chief Complaint:</b><br><div align="left">{{ record.complaint }}</div>
+                            <b>Medical History:</b><br><div align="left"> {{ record.history }}</div>
+                            <b>Test Results:</b><br><div align="left"> {{ record.results }}</div>
+                            <b>Assessment:</b><br><div align="left"> {{ record.assessment }}</div>
+                            <b>Plan:</b><br><div align="left"> {{ record.plan }}</div>
+                            <b>Prescriptions:</b><br><div align="left">{{ record.prescriptions }}</div>
+                            <b>Demographics:</b><br><div align="left">{{ record.demographics }}</div>
+                        </div>
+                        <div class="modal-footer">
+                            <div align="left" style="float:left"> Added by Dr.
+                                <a href="{{ url_for('user', username=record.author.username) }}">{{ record.author.username }}</a>
+                                at {{ moment(record.timestamp).fromNow() }}.
+                            </div>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+            <table class="table table-hover">
+                <tr>
+                    <td width="70px">
+                        <a href="{{ url_for('patient_profile', unit_id=record.owner.id) }}">
+                            <img src="{{ record.owner.avatar(60) }}" />
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('user', username=record.author.username) }}">
+                            {{ record.author.username }}
+                        </a>
+                            added at {{ moment(record.timestamp).fromNow() }}:
+                        <div style="float:right;">
+                            <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModal{{ loop.index }}">Details</button>
+                        </div>
+                        <br>
+                        <b>{{ record.body }}</b>
+                    </td>
+                </tr>
+            </table>
         {% endfor %}
         <div class="page-footer">{{ render_pagination(pagination) }}</div>
     {% else %}
-        <div class="tip"><h5>No Records.</h5></div>
+        <div class="tip">No Records.</div>
     {% endif %}
 {% endblock %}

@@ -3,6 +3,7 @@
 
 {% block title %}Manage Records{% endblock %}
 
+
 {% block app_content %}
 <div class="page-header">
     <h1>Records
@@ -19,7 +20,7 @@
     <div class="row">
         <div class="col-lg-6">
             <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="please enter content...">
+                <input type="text" name="q" class="form-control" placeholder="search by abstract...">
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="submit">Search!</button>
                 </span>
@@ -39,51 +40,36 @@
     <tr>
         <th data-field="id">No.</th>
         <th data-field="avatar">Avatar</th>
+        <th data-field="abstract" data-filter-control="input">Abstract</th>
         <th data-field="patient" data-filter-control="input">Patient</th>
-        <th data-field="content" data-filter-control="input">Content</th>
         <th data-field="user" data-filter-control="input">Added by</th>
         <th>Actions</th>
     </tr>
     </thead>
     {% for record in records %}
-    <tr>
-        <td>{{ loop.index + ((page - 1) * config.UNITS_PER_PAGE) }}</td>
-        <td><img src="{{ record.owner.avatar(30) }}" /></td>
-        <td><a href="{{ url_for('patient_profile', unit_id=record.owner.id, next=request.full_path) }}">{{ record.owner.name }}</a></td>
-        <td>{{ record.body }}</td>
-        <td><a href="{{ url_for('user', username=record.author.username) }}">{{ record.author.username }}{% if record.author.can('ADMINISTER') %} (Admin){% endif %}</a></td>
-        {% if (record.author == current_user) or (current_user.can('ADMINISTER')) %}
-        <td>
-            <a class="btn btn-info btn-sm" href="{{ url_for('record_edit', record_id=record.id, next=request.full_path) }}">Edit</a>
-            <form style="display: inline" class="inline" method="post" action="{{ url_for('record_delete', record_id=record.id, next=request.full_path) }}">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</button>
-            </form>
-            <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModal">Detail</button>
-        </td>
-
-        
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="myModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
                     </button>
-                    <h4 class="modal-title" id="myModalLabel">
-                        Patient Detail
-                    </h4>
+                    <h3 class="modal-title" id="myModalLabel"><img src="{{ record.owner.avatar(70) }}" /> {{ record.owner.name }}'s Clinical Record </h3>
                 </div>
                 <div class="modal-body">
-
-                  <a href="{{ url_for('user', username=record.author.username) }}">
-                        {{ record.author.username }}
-                    </a>
-                        added at {{ moment(record.timestamp).fromNow() }}:
-                    <br>
-                    <b>{{ record.body }}</b>
-
+                    <b>Abstract:</b><div align="left">{{ record.body }}</div>
+                    <b>Chief Complaint:</b><br><div align="left">{{ record.complaint }}</div>
+                    <b>Medical History:</b><br><div align="left"> {{ record.history }}</div>
+                    <b>Test Results:</b><br><div align="left"> {{ record.results }}</div>
+                    <b>Assessment:</b><br><div align="left"> {{ record.assessment }}</div>
+                    <b>Plan:</b><br><div align="left"> {{ record.plan }}</div>
+                    <b>Prescriptions:</b><br><div align="left">{{ record.prescriptions }}</div>
+                    <b>Demographics:</b><br><div align="left">{{ record.demographics }}</div>
                 </div>
                 <div class="modal-footer">
+                    <div align="left" style="float:left"> Added by Dr.
+                        <a href="{{ url_for('user', username=record.author.username) }}">{{ record.author.username }}</a>
+                        at {{ moment(record.timestamp).fromNow() }}.
+                    </div>
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         Close
                     </button>
@@ -91,12 +77,26 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
+    <tr>
+        <td>{{ loop.index + ((page - 1) * config.UNITS_PER_PAGE) }}</td>
+        <td><img src="{{ record.owner.avatar(30) }}" /></td>
+        <td>{{ record.body }}</td>
+        <td><a href="{{ url_for('patient_profile', unit_id=record.owner.id, next=request.full_path) }}">{{ record.owner.name }}</a></td>
+        <td><a href="{{ url_for('user', username=record.author.username) }}">{{ record.author.username }}{% if record.author.can('ADMINISTER') %} (Admin){% endif %}</a></td>
+        {% if (record.author == current_user) or (current_user.can('ADMINISTER')) %}
+        <td>
+            <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModal{{ loop.index }}">Detail</button>
+            <a class="btn btn-info btn-sm" href="{{ url_for('record_edit', record_id=record.id, next=request.full_path) }}">Edit</a>
+            <form style="display: inline" class="inline" method="post" action="{{ url_for('record_delete', record_id=record.id, next=request.full_path) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</button>
+            </form>
+        </td>
         {% else %}
         <td>
+            <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModal{{ loop.index }}">Detail</button>
             <button class="btn btn-info btn-sm disabled" >Edit</button>
             <button class="btn btn-danger btn-sm disabled">Delete</button>
-            <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModal">Detail</button>
         </td>
         {% endif %}
     </tr>

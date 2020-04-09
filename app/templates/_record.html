@@ -1,18 +1,19 @@
 
-    <table class="table table-hover">
-        <tr>
-            <td width="70px">
-                <a href="{{ url_for('patient_profile', unit_id=record.owner.id) }}">
-                    <img src="{{ record.owner.avatar(60) }}" />
-                </a>
-            </td>
-            <td>
-                <a href="{{ url_for('user', username=record.author.username) }}">
-                    {{ record.author.username }}
-                </a>
-                    added at {{ moment(record.timestamp).fromNow() }}:
-                <br>
-                <b>{{ record.body }}</b>
-            </td>
-        </tr>
-    </table>
+
+<table class="table table-hover">
+    <tr>
+        <td width="70px">
+            <a href="{{ url_for('patient_profile', unit_id=record.owner.id) }}">
+                <img src="{{ record.owner.avatar(60) }}" />
+            </a>
+        </td>
+        <td>
+            <a href="{{ url_for('user', username=record.author.username) }}">
+                {{ record.author.username }}
+            </a>
+                added at {{ moment(record.timestamp).fromNow() }}:
+            <br>
+            <b>{{ record.body }}</b>
+        </td>
+    </tr>
+</table>
