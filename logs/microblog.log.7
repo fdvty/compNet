@@ -1,4 +1,4 @@
-2020-04-08 19:17:03,369 ERROR: Exception on /record/add [POST] [in /usr/local/lib/python2.7/dist-packages/flask/app.py:1891]
+2020-04-08 17:21:59,791 ERROR: Exception on /unit/11/edit [POST] [in /usr/local/lib/python2.7/dist-packages/flask/app.py:1891]
 Traceback (most recent call last):
   File "/usr/local/lib/python2.7/dist-packages/flask/app.py", line 2446, in wsgi_app
     response = self.full_dispatch_request()
@@ -12,7 +12,7 @@ Traceback (most recent call last):
     return self.view_functions[rule.endpoint](**req.view_args)
   File "/usr/local/lib/python2.7/dist-packages/flask_login/utils.py", line 272, in decorated_view
     return func(*args, **kwargs)
-  File "/root/compNet/app/routes.py", line 61, in record_add
+  File "/root/compNet/app/routes.py", line 162, in unit_edit
     db.session.commit()
   File "/usr/local/lib/python2.7/dist-packages/sqlalchemy/orm/scoping.py", line 162, in do
     return getattr(self.registry(), name)(*args, **kwargs)
@@ -61,11 +61,7 @@ Traceback (most recent call last):
   File "/usr/local/lib/python2.7/dist-packages/whoosh/filedb/structfile.py", line 245, in read_pickle
     return load_pickle(self.file)
 ValueError: unsupported pickle protocol: 4
-2020-04-09 09:40:07,506 INFO: Microblog startup [in /root/compNet/app/__init__.py:66]
-2020-04-09 09:40:07,824 INFO: Microblog startup [in /root/compNet/app/__init__.py:66]
-2020-04-09 09:40:07,911 INFO: Microblog startup [in /root/compNet/app/__init__.py:66]
-2020-04-09 09:40:07,935 INFO: Microblog startup [in /root/compNet/app/__init__.py:66]
-2020-04-09 13:03:47,859 ERROR: Exception on /unit/add [POST] [in /usr/local/lib/python2.7/dist-packages/flask/app.py:1891]
+2020-04-08 17:36:35,395 ERROR: Exception on /unit/11/edit [POST] [in /usr/local/lib/python2.7/dist-packages/flask/app.py:1891]
 Traceback (most recent call last):
   File "/usr/local/lib/python2.7/dist-packages/flask/app.py", line 2446, in wsgi_app
     response = self.full_dispatch_request()
@@ -79,7 +75,7 @@ Traceback (most recent call last):
     return self.view_functions[rule.endpoint](**req.view_args)
   File "/usr/local/lib/python2.7/dist-packages/flask_login/utils.py", line 272, in decorated_view
     return func(*args, **kwargs)
-  File "/root/compNet/app/routes.py", line 112, in unit_add
+  File "/root/compNet/app/routes.py", line 162, in unit_edit
     db.session.commit()
   File "/usr/local/lib/python2.7/dist-packages/sqlalchemy/orm/scoping.py", line 162, in do
     return getattr(self.registry(), name)(*args, **kwargs)
@@ -103,14 +99,14 @@ Traceback (most recent call last):
     uow,
   File "/usr/local/lib/python2.7/dist-packages/sqlalchemy/orm/persistence.py", line 264, in save_obj
     ) in states_to_update
-  File "/usr/local/lib/python2.7/dist-packages/sqlalchemy/orm/persistence.py", line 1433, in _finalize_insert_update_commands
-    mapper.dispatch.after_insert(mapper, connection, state)
+  File "/usr/local/lib/python2.7/dist-packages/sqlalchemy/orm/persistence.py", line 1435, in _finalize_insert_update_commands
+    mapper.dispatch.after_update(mapper, connection, state)
   File "/usr/local/lib/python2.7/dist-packages/sqlalchemy/event/attr.py", line 322, in __call__
     fn(*args, **kw)
   File "/usr/local/lib/python2.7/dist-packages/sqlalchemy/orm/events.py", line 646, in wrap
     fn(*arg, **kw)
-  File "/usr/local/lib/python2.7/dist-packages/flask_whooshee.py", line 429, in after_insert
-    self.on_commit([[target, INSERT_KWD]])
+  File "/usr/local/lib/python2.7/dist-packages/flask_whooshee.py", line 435, in after_update
+    self.on_commit([[target, UPDATE_KWD]])
   File "/usr/local/lib/python2.7/dist-packages/flask_whooshee.py", line 454, in on_commit
     writer = type(self).get_or_create_index(_get_app(self), wh).\
   File "/usr/local/lib/python2.7/dist-packages/flask_whooshee.py", line 424, in get_or_create_index

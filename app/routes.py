@@ -1,3 +1,4 @@
+#coding=utf-8
 from flask import render_template, flash, redirect, url_for, request, send_from_directory
 from app import app, avatars, db
 from flask_login import current_user, login_user, logout_user, login_required

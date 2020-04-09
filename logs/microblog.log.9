@@ -1,0 +1,101 @@
+2020-02-29 13:51:41,905 ERROR: Exception on /reset_password_request [POST] [in /Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/apple/microblog/app/routes.py", line 172, in reset_password_request
+    send_password_reset_email(user)
+  File "/Users/apple/microblog/app/email.py", line 34, in send_password_reset_email
+    html_body=None)
+  File "/Users/apple/microblog/app/email.py", line 17, in send_email
+    mail.send(msg)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask_mail.py", line 491, in send
+    with self.connect() as connection:
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask_mail.py", line 144, in __enter__
+    self.host = self.configure_host()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask_mail.py", line 165, in configure_host
+    host.login(self.mail.username, self.mail.password)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/smtplib.py", line 730, in login
+    raise last_exception
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/smtplib.py", line 721, in login
+    initial_response_ok=initial_response_ok)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/smtplib.py", line 642, in auth
+    raise SMTPAuthenticationError(code, resp)
+smtplib.SMTPAuthenticationError: (534, b'5.7.14 <https://accounts.google.com/signin/continue?sarp=1&scc=1&plt=AKgnsbu\n5.7.14 zDs1odUdn2yDVUZUvP12QCPmZ0c4II0SImS2-gdywyKK0a_kegAe9-UEDrPhRef36KsLf\n5.7.14 AyvD-Q_Fhh4qa6BSgOgraZZE32-NX2AUv1R6y1Pk4WVyuJZgr2R90ZmRgUOElgqH>\n5.7.14 Please log in via your web browser and then try again.\n5.7.14  Learn more at\n5.7.14  https://support.google.com/mail/answer/78754 p17sm12926500pfn.31 - gsmtp')
+2020-02-29 13:53:21,880 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 13:53:35,952 ERROR: Exception on /reset_password_request [POST] [in /Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/apple/microblog/app/routes.py", line 172, in reset_password_request
+    send_password_reset_email(user)
+  File "/Users/apple/microblog/app/email.py", line 34, in send_password_reset_email
+    html_body=None)
+  File "/Users/apple/microblog/app/email.py", line 17, in send_email
+    mail.send(msg)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask_mail.py", line 491, in send
+    with self.connect() as connection:
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask_mail.py", line 144, in __enter__
+    self.host = self.configure_host()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask_mail.py", line 165, in configure_host
+    host.login(self.mail.username, self.mail.password)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/smtplib.py", line 730, in login
+    raise last_exception
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/smtplib.py", line 721, in login
+    initial_response_ok=initial_response_ok)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/smtplib.py", line 642, in auth
+    raise SMTPAuthenticationError(code, resp)
+smtplib.SMTPAuthenticationError: (534, b'5.7.14 <https://accounts.google.com/signin/continue?sarp=1&scc=1&plt=AKgnsbs\n5.7.14 zIe1U1Q3To9X8fN2_dFsnNPj9-I8631yThlDWQXrMadXulqH5bnvAhw8bhh0ACtSC15Iv\n5.7.14 9LNgI2sMpfuKj7OoSY7byhFVotSH-ojO0ssf-XQFuSt6YigfOnJ_O-2V2qVkt34S>\n5.7.14 Please log in via your web browser and then try again.\n5.7.14  Learn more at\n5.7.14  https://support.google.com/mail/answer/78754 m12sm4181260pjf.25 - gsmtp')
+2020-02-29 13:55:10,764 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 13:55:25,652 ERROR: Exception on /reset_password_request [POST] [in /Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/apple/microblog/app/routes.py", line 172, in reset_password_request
+    send_password_reset_email(user)
+  File "/Users/apple/microblog/app/email.py", line 23, in send_password_reset_email
+    mail.send(msg)
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask_mail.py", line 491, in send
+    with self.connect() as connection:
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask_mail.py", line 144, in __enter__
+    self.host = self.configure_host()
+  File "/Users/apple/microblog/venv/lib/python3.7/site-packages/flask_mail.py", line 165, in configure_host
+    host.login(self.mail.username, self.mail.password)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/smtplib.py", line 730, in login
+    raise last_exception
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/smtplib.py", line 721, in login
+    initial_response_ok=initial_response_ok)
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/smtplib.py", line 642, in auth
+    raise SMTPAuthenticationError(code, resp)
+smtplib.SMTPAuthenticationError: (534, b'5.7.14 <https://accounts.google.com/signin/continue?sarp=1&scc=1&plt=AKgnsbu\n5.7.14 uqJhdO96ODi7tOsASx592dsZ-2Q9jSnSLEizVqN-HRgbm1KOseAL0VSfiivI1F4reZ-mW\n5.7.14 0WoNc-l_VOc4akMPepdH9mSv4Hps3jS2zGPncoOXx7OnYo7OJTkpovhdUP-dZlzr>\n5.7.14 Please log in via your web browser and then try again.\n5.7.14  Learn more at\n5.7.14  https://support.google.com/mail/answer/78754 j12sm4370943pjd.4 - gsmtp')
+2020-02-29 13:59:49,735 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
+2020-02-29 14:01:31,227 INFO: Microblog startup [in /Users/apple/microblog/app/__init__.py:54]
