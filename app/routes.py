@@ -22,7 +22,9 @@ def patient_profile(unit_id):
     unit = Unit.query.get(unit_id)
     form = RecordForm()
     if form.validate_on_submit():
-        record = Record(body=form.body.data, owner=unit, author=current_user)
+        record = Record(complaint=form.complaint.data, history=form.history.data, results=form.results.data, assessment=form.assessment.data,
+                        plan=form.plan.data, prescriptions=form.prescriptions.data, demographics=form.demographics.data, body=form.body.data,
+                        owner=unit, author=current_user)
         db.session.add(record)
         db.session.commit()
         flash('Your record is now live!', category='info')
@@ -56,7 +58,9 @@ def record_add():
     form = AddRecordForm()
     form.unit_id.choices = [(u.id, u.name) for u in Unit.query.order_by(Unit.timestamp.desc()).all()]
     if form.validate_on_submit():
-        record = Record(body=form.body.data, owner=Unit.query.get(form.unit_id.data), author=current_user)
+        record = Record(complaint=form.complaint.data, history=form.history.data, results=form.results.data, assessment=form.assessment.data,
+                        plan=form.plan.data, prescriptions=form.prescriptions.data, demographics=form.demographics.data, body=form.body.data,
+                        owner=Unit.query.get(form.unit_id.data), author=current_user)
         db.session.add(record)
         db.session.commit()
         flash('Your record is now live!', category='info')
@@ -90,12 +94,26 @@ def record_edit(record_id):
         return redirect_back()
     form = RecordForm()
     if form.validate_on_submit():
+        record.complaint = form.complaint.data
+        record.history = form.history.data
+        record.results = form.results.data
+        record.assessment = form.assessment.data
+        record.plan = form.plan.data
+        record.prescriptions = form.prescriptions.data
+        record.demographics = form.demographics.data
         record.body = form.body.data
         record.timestamp = datetime.utcnow()
         db.session.commit()
         flash('Your changes have been saved.', category='info')
         return redirect_back()
     elif request.method == 'GET':  # 这里要区分第一次请求表格的情况
+        form.complaint.data = record.complaint
+        form.history.data = record.history
+        form.results.data = record.results
+        form.assessment.data = record.assessment
+        form.plan.data = record.plan
+        form.prescriptions.data = record.prescriptions
+        form.demographics.data = record.demographics
         form.body.data = record.body
     return render_template('edit_record.html', title='Edit Record', record=record, form=form)  # 和POST表格后出错的情况
 

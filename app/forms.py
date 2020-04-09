@@ -68,13 +68,27 @@ class UnitForm(FlaskForm):
     submit = SubmitField('Submit')
 
 class RecordForm(FlaskForm):
-    body = TextAreaField('Add Record', validators=[DataRequired(), Length(min=1, max=140)])
+    body = TextAreaField('Abstract', validators=[DataRequired(), Length(min=1, max=140)])
+    complaint = TextAreaField('Chief Complaint', validators=[DataRequired(), Length(min=1, max=140)])
+    history = TextAreaField('Medical History', validators=[DataRequired(), Length(min=1, max=140)])
+    results = TextAreaField('Examination Results', validators=[DataRequired(), Length(min=1, max=140)])
+    assessment = TextAreaField('Doctor\'s Assessment', validators=[DataRequired(), Length(min=1, max=140)])
+    plan = TextAreaField('Treatment Plans', validators=[DataRequired(), Length(min=1, max=140)])
+    prescriptions = TextAreaField('Prescriptions', validators=[DataRequired(), Length(min=1, max=140)])
+    demographics = TextAreaField('Demographics', validators=[DataRequired(), Length(min=1, max=140)])
     submit = SubmitField('Submit')
 
 class AddRecordForm(FlaskForm):
     choices = [(u.id, u.name) for u in Unit.query.order_by(Unit.timestamp.desc()).all()]
     unit_id = SelectField('Patient', coerce=int)
-    body = TextAreaField('Record', validators=[DataRequired(), Length(min=1, max=140)])
+    body = TextAreaField('Abstract', validators=[DataRequired(), Length(min=1, max=140)])
+    complaint = TextAreaField('Chief Complaint', validators=[DataRequired(), Length(min=1, max=140)])
+    history = TextAreaField('Medical History', validators=[DataRequired(), Length(min=1, max=140)])
+    results = TextAreaField('Examination Results', validators=[DataRequired(), Length(min=1, max=140)])
+    assessment = TextAreaField('Doctor\'s Assessment', validators=[DataRequired(), Length(min=1, max=140)])
+    plan = TextAreaField('Treatment Plans', validators=[DataRequired(), Length(min=1, max=140)])
+    prescriptions = TextAreaField('Prescriptions', validators=[DataRequired(), Length(min=1, max=140)])
+    demographics = TextAreaField('Demographics', validators=[DataRequired(), Length(min=1, max=140)])
     submit = SubmitField('Submit')
 
 

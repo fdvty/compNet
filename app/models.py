@@ -102,6 +102,13 @@ class Unit(db.Model):
 @whooshee.register_model('body')
 class Record(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
+	complaint = db.Column(db.String(140))
+	history = db.Column(db.String(140))
+	results = db.Column(db.String(140))
+	assessment = db.Column(db.String(140))
+	plan = db.Column(db.String(140))
+	prescriptions = db.Column(db.String(140))
+	demographics = db.Column(db.String(140))
 	body = db.Column(db.String(140))
 	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 	unit_id = db.Column(db.Integer, db.ForeignKey('unit.id'))
