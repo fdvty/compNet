@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+
+{% block app_content %}
+    <h1>
+        Evaluations
+        <small class="text-muted">{{ pagination.total }}</small>
+        <div style="float:right;">
+            <a class="btn btn-primary btn-sm" href="{{ url_for('add_evaluation', next=request.full_path) }}">Add Evaluation</a>
+        </div>
+    </h1>
+    <hr>
+
+
+{% if evaluations %}
+<table id = "table" class="table table-striped"  data-filter-control="true" data-show-clear="true">
+    <thead>
+    <tr>
+        <th data-field="id">No.</th>
+        <th>Result</th>
+        <th>Gender</th>
+        <th>Age</th>
+        <th>Contact History</th>
+        <th>Nuclei Acid Test</th>
+        <th>X-Ray Test</th>
+        <th>WBC</th>
+        <th>RBC</th>
+        <th>HGB</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    {% for evaluation in evaluations %}
+        <div class="modal fade" id="myModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                        </button>
+                        <h3 class="modal-title" id="myModalLabel">Quick Diagnostic Evaluation</h3>
+                    </div>
+                    <div class="modal-body">
+                        <b>Result:</b><div align="left">{{ evaluation.result }}</div>
+                        <b>Gender:</b><br><div align="left">{% if evaluation.gender == 0 %}M{% else %}F{% endif %}</div>
+                        <b>Age:</b><br><div align="left"> {{ evaluation.age }}</div>
+                        <b>Contacted with Confirmed Patients?</b><br><div align="left"> {% if evaluation.contact_history == 0 %}No{% else %}Yes{% endif %}</div>
+                        <b>Nuclei Acid Test:</b><br><div align="left"> {% if evaluation.acid_test == 0 %}Negative{% else %}Positive{% endif %}</div>
+                        <b>X-Ray Test:</b><br><div align="left"> {% if evaluation.x_ray == 0 %}Negative{% else %}Positive{% endif %}</div>
+                        <b>WBC(White Blood Cells):</b><br><div align="left">{{ evaluation.wbc }}</div>
+                        <b>RBC(Red Blood Cells):</b><br><div align="left">{{ evaluation.rbc }}</div>
+                        <b>HGB(Hemoglobin):</b><br><div align="left">{{ evaluation.hgb }}</div>
+                    </div>
+                    <div class="modal-footer">
+                        <div align="left" style="float:left"> Added
+                            at {{ moment(evaluation.timestamp).fromNow() }}.
+                        </div>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    <tr>
+        <td>{{ loop.index + ((page - 1) * config.UNITS_PER_PAGE) }}</td>
+        <td>{{ evaluation.result }}</td>
+        <td>{% if evaluation.gender == 0 %}M{% else %}F{% endif %}</td>
+        <td>{{ evaluation.age }}</td>
+        <td>{% if evaluation.contact_history == 0 %}No{% else %}Yes{% endif %}</td>
+        <td>{% if evaluation.acid_test == 0 %}Negative{% else %}Positive{% endif %}</td>
+        <td>{% if evaluation.x_ray == 0 %}Negative{% else %}Positive{% endif %}</td>
+        <td>{{ evaluation.wbc }}</td>
+        <td>{{ evaluation.rbc }}</td>
+        <td>{{ evaluation.hgb }}</td>
+        <td>
+            <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal{{ loop.index }}">Detail</button>
+            {% if (current_user.can('ADMINISTER')) %}
+            <form style="display: inline" class="inline" method="post" action="{{ url_for('delete_evaluation', evaluation_id=evaluation.id, next=request.full_path) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</button>
+            </form>
+            {% else %}
+            <button class="btn btn-danger btn-sm disabled">Delete</button>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+
+
+{% else %}
+    <div class="tip"><h5>No evaluations.</h5></div>
+{% endif %}
+
+{% endblock %}

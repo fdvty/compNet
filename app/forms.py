@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField, HiddenField, SelectField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField, HiddenField, SelectField, FloatField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
 from app.models import User, Unit
 from flask_wtf.file import FileField, FileAllowed, FileRequired
@@ -92,6 +92,16 @@ class AddRecordForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
+class EvaluateForm(FlaskForm):
+    gender = SelectField("Gender", coerce=int, choices=[(0, 'M'), (1, "F")])
+    age = IntegerField('Age', validators=[DataRequired()])
+    contact_history = SelectField("Contact with Pneumonia Patients", coerce=int, choices=[(0, 'N'), (1, "Y")])
+    acid_test = SelectField("Nucleci Acid Testing", coerce=int, choices=[(0, 'Negative'), (1, 'Positive')])
+    x_ray = SelectField("X-ray Testing", coerce=int, choices=[(0, 'Negative'), (1, 'Positive')])
+    wbc = FloatField("WBC(White Blood Cells)", validators=[DataRequired()])
+    rbc = FloatField("RBC(Red Blood Cells)", validators=[DataRequired()])
+    hgb = FloatField("HGB(Hemoglobin)", validators=[DataRequired()])
+    submit = SubmitField('Submit')
 
 
 class ResetPasswordRequestForm(FlaskForm):

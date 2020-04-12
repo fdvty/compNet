@@ -2,11 +2,12 @@
 from flask import render_template, flash, redirect, url_for, request, send_from_directory
 from app import app, avatars, db
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Unit, Record
+from app.models import User, Unit, Record, Evaluation
 from app.email import send_password_reset_email
 from app.utils import redirect_back, flash_errors, delete_avatar
 from app.forms import LoginForm, UnitForm, RegistrationForm, EditProfileForm, RecordForm, \
-    ResetPasswordForm, ResetPasswordRequestForm, UploadAvatarForm, CropAvatarForm, AddRecordForm
+    ResetPasswordForm, ResetPasswordRequestForm, UploadAvatarForm, CropAvatarForm, AddRecordForm, \
+    EvaluateForm
 from datetime import datetime
 from werkzeug.urls import url_parse
 
@@ -344,3 +345,40 @@ def reset_password(token):
         flash('Your password has been reset.', category='info')
         return redirect(url_for('login'))
     return render_template('reset_password.html', form=form)
+
+@app.route('/quick_evaluation', methods=['GET', 'POST'])
+@login_required
+def quick_evaluation():
+    page = request.args.get('page', 1, type=int)
+    pagination = Evaluation.query.order_by(Evaluation.timestamp.desc()).paginate(
+        page, app.config['EVALUATIONS_PER_PAGE_ADD'], False)
+    evaluations = pagination.items
+    return render_template('quick_evaluation.html', title='Quick Evaluate', evaluations=evaluations, pagination=pagination, page=page)
+
+@app.route('/add_evaluation', methods=['GET', 'POST'])
+@login_required
+def add_evaluation():
+    form = EvaluateForm()
+    if form.validate_on_submit():
+        # calculate result here ~
+        # add ML codes
+        evaluation = Evaluation(gender=form.gender.data, age=form.age.data, contact_history=form.contact_history.data, \
+                                acid_test=form.acid_test.data, x_ray=form.x_ray.data, wbc=form.wbc.data, rbc=form.rbc.data, \
+                                hgb=form.hgb.data, result=0.0)
+        db.session.add(evaluation)
+        db.session.commit()
+        flash('Your evaluation is now live!', category='success')
+        return redirect_back()
+    return render_template('add_evaluation.html', title='Add Evaluate', form=form)
+
+@app.route('/delete_evaluation/<int:evaluation_id>', methods=['POST'])
+@login_required
+def delete_evaluation(evaluation_id):
+    evaluation = Evaluation.query.get(evaluation_id)
+    if(current_user.can('ADMINISTER') == False):
+        flash('Permission Denied.', 'warning')
+        return redirect_back()
+    db.session.delete(evaluation)
+    db.session.commit()
+    flash('Evaluation deleted.', 'success')
+    return redirect_back()

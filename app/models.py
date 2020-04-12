@@ -166,3 +166,21 @@ class Permission(db.Model):
 
 	def __repr__(self):
 		return 'Permission {}'.format(self.name)
+
+class Evaluation(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	gender = db.Column(db.Integer)
+	age = db.Column(db.Integer)
+	contact_history = db.Column(db.Integer)
+	acid_test = db.Column(db.Integer)
+	x_ray = db.Column(db.Integer)
+	wbc = db.Column(db.Float)
+	rbc = db.Column(db.Float)
+	hgb = db.Column(db.Float)
+	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+	result = db.Column(db.Float)
+
+	def __repr__(self):
+		return 'ID {} age {}'.format(self.id, self.age)
+
