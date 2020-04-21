@@ -10,6 +10,7 @@ from app.forms import LoginForm, UnitForm, RegistrationForm, EditProfileForm, Re
     EvaluateForm
 from datetime import datetime
 from werkzeug.urls import url_parse
+import app.evaluator as evaluator
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -360,11 +361,12 @@ def quick_evaluation():
 def add_evaluation():
     form = EvaluateForm()
     if form.validate_on_submit():
-        # calculate result here ~
-        # add ML codes
-        evaluation = Evaluation(gender=form.gender.data, age=form.age.data, contact_history=form.contact_history.data, \
-                                acid_test=form.acid_test.data, x_ray=form.x_ray.data, wbc=form.wbc.data, rbc=form.rbc.data, \
-                                hgb=form.hgb.data, result=0.0)
+        # load model
+        model = evaluator.load_model()
+        field_names = ['gender', 'age', 'contact_history', 'acid_test', 'x_ray', 'wbc', 'rbc', 'hgb']
+        datas = {field_name: getattr(form, field_name).data for field_name in field_names}
+        result = evaluator.estimate(model, datas)
+        evaluation = Evaluation(**datas, result=result)
         db.session.add(evaluation)
         db.session.commit()
         flash('Your evaluation is now live!', category='success')
