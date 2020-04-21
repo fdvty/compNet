@@ -35,3 +35,4 @@ watchdog==0.10.2
 Werkzeug==1.0.0
 Whoosh==2.7.4
 WTForms==2.2.1
+torch==1.4.0+cpu
