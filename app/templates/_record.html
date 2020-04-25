@@ -13,7 +13,9 @@
             </a>
                 added at {{ moment(record.timestamp).fromNow() }}:
             <br>
-            <b>{{ record.body }}</b>
+            <b>Name: </b>{{ record.owner.name }}
+            <br>
+            <b>Abstract: </b>{{ record.body }}
         </td>
     </tr>
 </table>

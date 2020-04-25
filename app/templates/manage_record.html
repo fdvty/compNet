@@ -40,8 +40,8 @@
     <tr>
         <th data-field="id">No.</th>
         <th data-field="avatar">Avatar</th>
+        <th data-field="name" data-filter-control="input">Name</th>
         <th data-field="abstract" data-filter-control="input">Abstract</th>
-        <th data-field="patient" data-filter-control="input">Patient</th>
         <th data-field="user" data-filter-control="input">Added by</th>
         <th>Actions</th>
     </tr>
@@ -80,8 +80,8 @@
     <tr>
         <td>{{ loop.index + ((page - 1) * config.UNITS_PER_PAGE) }}</td>
         <td><img src="{{ record.owner.avatar(30) }}" /></td>
-        <td>{{ record.body }}</td>
         <td><a href="{{ url_for('patient_profile', unit_id=record.owner.id, next=request.full_path) }}">{{ record.owner.name }}</a></td>
+        <td>{{ record.body }}</td>
         <td><a href="{{ url_for('user', username=record.author.username) }}">{{ record.author.username }}{% if record.author.can('ADMINISTER') %} (Admin){% endif %}</a></td>
         {% if (record.author == current_user) or (current_user.can('ADMINISTER')) %}
         <td>
