@@ -15,7 +15,7 @@
                 <h1>
                     {{ unit.name }}
                 </h1>
-                    <a class="btn btn-link btn-sm" href="{{ url_for('change_avatar', unit_id=unit.id, next=request.full_path) }}">Change Avatar</a>
+                    &nbsp;<a href="{{ url_for('change_avatar', unit_id=unit.id, next=request.full_path) }}">Change Avatar</a>
                 <br>
             </td>
         </tr>
