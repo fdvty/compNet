@@ -1,8 +1,25 @@
 {% extends "base.html" %}
 
+{% block styles %}
+    {{ super() }}
+    <style>
+        .featurette-image.pull-left {
+            margin-right:25px;
+        }
+        .featurette-image.pull-right {
+            margin-left:25px;
+        }
+        .imgBorder {
+            border: 1px solid silver;
+        }
+    </style>
+{% endblock %}
+
+
+
+
 {% block app_content %}
 
-<!--<div class="hero-unit">-->
 <div class="container">
     <div class="jumbotron">
         <h1 class="main-title">Patient Management</h1>
@@ -30,6 +47,22 @@
         And you can also add diagnostics records to your patients.
     </p>
 </div>
+
+<br>
+<hr>
+
+<div class="featurette">
+    <span class="featurette-image pull-left">
+        <img src="{{ url_for('static', filename='images/nn.jpg') }}" alt="" class="imgBorder" width="330" height="200"/>
+    </span>
+    <h2 class="featurette-heading">WIT120. <span class="text-muted">A classifier prediction model to find potential Coronavirus-infected patients. </span></h2>
+    <p class="lead">
+        We use a Multilayer Perceptron to predict your patients' probability of being infected by Coronavirus.
+        The results show that our proposed predictive classifier can efficiently predict the infected cases...
+        The earlier discovery of the disease means better control and a higher probability of being recovered.
+    </p>
+</div>
+<br>
 
 {% endblock %}
 
