@@ -40,9 +40,11 @@
                 <h1>
                     {{ unit.name }}
                 </h1>
-                    &nbsp {{ unit.age }} years old
-                <br>
-                    &nbsp {{ unit.comment }}
+                <b>Gender: </b>{% if unit.gender == 1 %}F{% else %}M{% endif %}<br>
+                <b>Age: </b>{{ unit.age }}<br>
+                <b>Height: </b>{{ unit.height }} (cm)<br>
+                <b>Weight: </b>{{ unit.weight }} (kg)<br>
+                <b>Comment: </b>{{ unit.comment }}
             </td>
         </tr>
     </table>
@@ -99,7 +101,7 @@
                         </a>
                     </td>
                     <td>
-                        <a href="{{ url_for('user', username=record.author.username) }}">
+                        Dr. <a href="{{ url_for('user', username=record.author.username) }}">
                             {{ record.author.username }}
                         </a>
                             added at {{ moment(record.timestamp).fromNow() }}:

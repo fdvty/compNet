@@ -8,7 +8,7 @@
             </a>
         </td>
         <td>
-            <a href="{{ url_for('user', username=record.author.username) }}">
+            Dr. <a href="{{ url_for('user', username=record.author.username) }}">
                 {{ record.author.username }}
             </a>
                 added at {{ moment(record.timestamp).fromNow() }}:

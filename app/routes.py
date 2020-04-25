@@ -126,8 +126,8 @@ def record_edit(record_id):
 def unit_add():
     form = UnitForm();
     if form.validate_on_submit():
-        unit = Unit(name=form.name.data, comment=form.comment.data,
-                    age=form.age.data, owner=current_user)
+        unit = Unit(name=form.name.data, comment=form.comment.data, gender=form.gender.data, height=form.height.data,
+                    weight=form.weight.data, age=form.age.data, owner=current_user)
         db.session.add(unit)
         db.session.commit()
         flash('Your unit is now live!', category='info')
@@ -179,6 +179,9 @@ def unit_edit(unit_id):
         unit.age = form.age.data
         unit.comment = form.comment.data
         unit.timestamp = datetime.utcnow()
+        unit.gender = form.gender.data
+        unit.height = form.height.data
+        unit.weight = form.weight.data
         db.session.commit()
         flash('Your changes have been saved.', category='info')
         return redirect_back()
@@ -186,6 +189,9 @@ def unit_edit(unit_id):
         form.name.data = unit.name
         form.age.data = unit.age
         form.comment.data = unit.comment
+        form.gender.data = unit.gender
+        form.height.data = unit.height
+        form.weight.data = unit.weight
     return render_template('edit_unit.html', title='Edit Unit', unit=unit, form=form)  # 和POST表格后出错的情况
 
 

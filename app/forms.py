@@ -63,7 +63,10 @@ class EditProfileForm(FlaskForm):
 
 class UnitForm(FlaskForm):
     name = TextAreaField('Name', validators=[DataRequired(), Length(min=1, max=40)])
+    gender = SelectField("Gender", coerce=int, choices=[(0, 'M'), (1, "F")])
     age = IntegerField('Age', validators=[DataRequired()])
+    height = FloatField("Height(cm)", validators=[DataRequired()])
+    weight = FloatField("Weight(kg)", validators=[DataRequired()])
     comment = TextAreaField('Comment', validators=[DataRequired(), Length(min=1, max=140)])
     submit = SubmitField('Submit')
 
@@ -79,7 +82,6 @@ class RecordForm(FlaskForm):
     submit = SubmitField('Submit')
 
 class AddRecordForm(FlaskForm):
-    choices = [(u.id, u.name) for u in Unit.query.order_by(Unit.timestamp.desc()).all()]
     unit_id = SelectField('Patient', coerce=int)
     body = TextAreaField('Abstract', validators=[DataRequired(), Length(min=1, max=140)])
     complaint = TextAreaField('Chief Complaint', validators=[DataRequired(), Length(min=1, max=140)])
