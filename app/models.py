@@ -180,6 +180,8 @@ class Evaluation(db.Model):
 	wbc = db.Column(db.Float)
 	rbc = db.Column(db.Float)
 	hgb = db.Column(db.Float)
+	continent = db.Column(db.String(30))
+	country = db.Column(db.String(30))
 	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
 	result = db.Column(db.Float)

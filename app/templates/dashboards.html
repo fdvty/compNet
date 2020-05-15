@@ -1,0 +1,346 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+
+{% block title %}Dashboards{% endblock %}
+
+
+{%block metas %}
+    {{ super() }}
+<!--Add metas here-->
+
+    <meta charset="utf-8">
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+<!--Add styles here-->
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/treemap.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+
+    <script language="JavaScript">
+    $(document).ready(function() {
+
+        var data = {{ data_map | tojson }}
+        var points = [],
+            region_p,
+            region_val,
+            region_i,
+            country_p,
+            country_i,
+            cause_p,
+            cause_i,
+            cause_name = [];
+        cause_name['Suspected'] = 'Suspected Cases';
+        cause_name['Normal'] = 'Normal Cases';
+        region_i = 0;
+        for (var region in data) {
+            region_val = 0;
+            region_p = {
+                id: "id_" + region_i,
+                name: region,
+                color: Highcharts.getOptions().colors[region_i]
+            };
+            country_i = 0;
+            for (var country in data[region]) {
+                country_p = {
+                    id: region_p.id + "_" + country_i,
+                    name: country,
+                    parent: region_p.id
+                };
+                points.push(country_p);
+                cause_i = 0;
+                for (var cause in data[region][country]) {
+                    cause_p = {
+                        id: country_p.id + "_" + cause_i,
+                        name: cause_name[cause],
+                        parent: country_p.id,
+                        value: Math.round(+data[region][country][cause])
+                    };
+                    region_val += cause_p.value;
+                    points.push(cause_p);
+                    cause_i++;
+                }
+                country_i++;
+            }
+            region_p.value = Math.round(region_val / country_i);
+            points.push(region_p);
+            region_i++;
+        }
+       var chart = {
+          renderTo: 'container'
+       };
+
+       var title = {
+          text: 'Geographical Distribution of submitted cases'
+       };
+
+       var subtitle = {
+          text: 'click for detailed data'
+       };
+
+       var series = [{
+          type: "treemap",
+          layoutAlgorithm: 'squarified',
+          allowDrillToNode: true,
+          dataLabels: {
+             enabled: false
+          },
+          levelIsConstant: false,
+          levels: [{
+             level: 1,
+             dataLabels: {
+                enabled: true
+             },
+          borderWidth: 3
+          }],
+          data: points
+       }];
+
+       var json = {};
+       json.title = title;
+       json.subtitle = subtitle;
+       json.series = series;
+
+       $('#container_map').highcharts(json);
+    });
+    </script>
+
+    <script language="JavaScript">
+    $(document).ready(function() {
+       var chart = {
+           plotBackgroundColor: null,
+           plotBorderWidth: null,
+           plotShadow: false
+       };
+       var title = {
+          text: 'Gender Statistics of COVID-19 Suspected Cases'
+       };
+       var subtitle = {
+          text: 'Cases with Predicted Sick Probability >= 80%'
+       };
+       var tooltip = {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+       };
+       var plotOptions = {
+          pie: {
+             allowPointSelect: true,
+             cursor: 'pointer',
+             dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}%</b>: {point.percentage:.1f} %',
+                style: {
+                   color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+             }
+          }
+       };
+       var series= [{
+          type: 'pie',
+          name: 'Gender ratio',
+          data: {{ gender_data | tojson }}
+       }];
+       Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
+          return {
+             radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
+             stops: [
+                [0, color],
+                [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+             ]
+          };
+       });
+
+       var json = {};
+       json.chart = chart;
+       json.title = title;
+       json.subtitle = subtitle;
+       json.tooltip = tooltip;
+       json.series = series;
+       json.plotOptions = plotOptions;
+       $('#container_pie').highcharts(json);
+    });
+    </script>
+
+
+    <script language="JavaScript">
+    $(document).ready(function() {
+       var chart = {
+          type: 'bar'
+       };
+       var title = {
+          text: 'Age Statistics of COVID-19 Suspected Cases'
+       };
+       var subtitle = {
+          text: 'Cases with Predicted Sick Probability >= 80%'
+       };
+       var xAxis = {
+          categories: ['Age 0~19', 'Age 20~39', 'Age 40~59', 'Age 60~79', 'Age 80+'],
+          title: {
+             text: null
+          }
+       };
+       var yAxis = {
+          min: 0,
+          title: {
+             text: 'Case',
+             align: 'high'
+          },
+          labels: {
+             overflow: 'justify'
+          }
+       };
+       var tooltip = {
+          valueSuffix: ' case'
+       };
+       var plotOptions = {
+          bar: {
+             dataLabels: {
+                enabled: true
+             }
+          }
+       };
+       var legend = {
+          layout: 'vertical',
+          align: 'right',
+          verticalAlign: 'top',
+          x: -40,
+          y: 100,
+          floating: true,
+          borderWidth: 1,
+          backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+          shadow: true
+       };
+       var credits = {
+          enabled: false
+       };
+
+       var series= [{
+             name: 'Male',
+                data: {{ data_0 | tojson }}
+            }, {
+                name: 'Female',
+                data: {{ data_1 | tojson }}
+            }
+       ];
+
+       var json = {};
+       json.chart = chart;
+       json.title = title;
+       json.subtitle = subtitle;
+       json.tooltip = tooltip;
+       json.xAxis = xAxis;
+       json.yAxis = yAxis;
+       json.series = series;
+       json.plotOptions = plotOptions;
+       json.legend = legend;
+       json.credits = credits;
+       $('#container_bar').highcharts(json);
+
+    });
+    </script>
+
+    <script language="JavaScript">
+    $(document).ready(function() {
+       var chart = {
+          type: 'scatter',
+          zoomType: 'xy'
+       };
+       var title = {
+          text: 'Blood Test Results (Rbc, Wbc) in submitted cases'
+       };
+       var subtitle = {
+          text: 'All Cases'
+       };
+       var xAxis = {
+          title: {
+          enabled: true,
+             text: 'Rbc'
+          },
+          startOnTick: true,
+          endOnTick: true,
+          showLastLabel: true
+       };
+       var yAxis = {
+          title: {
+             text: 'Wbc'
+          }
+       };
+       var legend = {
+          layout: 'vertical',
+          align: 'left',
+          verticalAlign: 'top',
+          x: 100,
+          y: 70,
+          floating: true,
+          backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+          borderWidth: 1
+       }
+       var plotOptions = {
+          scatter: {
+             marker: {
+                radius: 5,
+                states: {
+                   hover: {
+                      enabled: true,
+                      lineColor: 'rgb(100,100,100)'
+                   }
+                }
+             },
+             states: {
+                hover: {
+                   marker: {
+                      enabled: false
+                   }
+                }
+             },
+             tooltip: {
+                headerFormat: '<b>{series.name}</b><br>',
+                pointFormat: '{point.x} rbc, {point.y} wbc'
+             }
+          }
+       };
+       var series= [{
+                name: 'Suspected',
+                color: 'rgba(223, 83, 83, .5)',
+                data: {{ data_susp | tojson }}
+
+            }, {
+                name: 'Normal',
+                color: 'rgba(119, 152, 191, .5)',
+                data: {{ data_safe | tojson }}
+          }
+       ];
+
+       var json = {};
+       json.chart = chart;
+       json.title = title;
+       json.subtitle = subtitle;
+       json.legend = legend;
+       json.xAxis = xAxis;
+       json.yAxis = yAxis;
+       json.series = series;
+       json.plotOptions = plotOptions;
+       $('#container_scatter').highcharts(json);
+
+    });
+    </script>
+
+{% endblock %}
+
+{% block app_content %}
+    <h1 align="center">Statistics of Submitted Cases</h1>
+    <hr>
+    <div id="container_pie" style="width: 550px; height: 400px; margin: 0 auto"></div>
+    <hr>
+    <div id="container_bar" style="width: 550px; height: 400px; margin: 0 auto"></div>
+    <hr>
+    <div id="container_scatter" style="width: 550px; height: 400px; margin: 0 auto"></div>
+    <hr>
+    <div id="container_map" style="width: 550px; height: 400px; margin: 0 auto"></div>
+{% endblock %}

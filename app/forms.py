@@ -103,6 +103,8 @@ class EvaluateForm(FlaskForm):
     wbc = FloatField("WBC(White Blood Cells)", validators=[DataRequired()])
     rbc = FloatField("RBC(Red Blood Cells)", validators=[DataRequired()])
     hgb = FloatField("HGB(Hemoglobin)", validators=[DataRequired()])
+    continent = StringField('Continent', validators=[DataRequired()])
+    country = StringField('Country', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 

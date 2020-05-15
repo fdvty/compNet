@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block styles %}
-    {{super()}}
+    {{ super() }}
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
     <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 {% endblock %}
@@ -30,10 +30,10 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('dashboards') }}">Home</a></li>
                     <li><a href="{{ url_for('record_manage') }}">Records</a></li>
                     <li><a href="{{ url_for('unit_manage') }}">Patients</a></li>
-                    <li><a href="{{ url_for('quick_evaluation')}}">Evaluate</a></li>
+                    <li><a href="{{ url_for('quick_evaluation') }}">Evaluate</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_anonymous %}
@@ -72,8 +72,8 @@
 {% endblock %}
 
 {% block scripts %}
-    {{super()}}
-    {{moment.include_moment()}}
+    {{ super() }}
+    {{ moment.include_moment() }}
 {% endblock %}
 
 

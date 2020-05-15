@@ -11,12 +11,92 @@ from app.forms import LoginForm, UnitForm, RegistrationForm, EditProfileForm, Re
 from datetime import datetime
 from werkzeug.urls import url_parse
 import app.evaluator as evaluator
+from sqlalchemy import func
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     return render_template('home.html')
 
+
+@app.route('/dashboards', methods=['GET', 'POST'])
+@login_required
+def dashboards():
+    # 下面这一行完成的是分类统计，按照Evaluation.gender，统计两个性别的人数
+    # evaluations = db.session.query(Evaluation.gender, func.sum(1)).group_by(Evaluation.gender).all()
+    # for row in evaluations:
+    #     print(row[0], row[1])
+    #     if row[0] == 0:
+    #         gender_data.append(['Male', row[1]/total])
+    #     else:
+    #         gender_data.append(['Female', row[1]/total])
+
+    suspected_male = 0
+    suspected_female = 0
+    data_0 = [0, 0, 0, 0, 0]
+    data_1 = [0, 0, 0, 0, 0]
+    data_susp = []
+    data_safe = []
+    for evaluation in db.session.query(Evaluation).filter(Evaluation.result >= 0.8).all():
+        index = int(evaluation.age / 20)
+        if(index > 4):
+            index = 4
+        if evaluation.gender == 0:
+            data_0[index] += 1
+            suspected_male += 1
+        else:
+            data_1[index] += 1
+            suspected_female += 1
+        data_susp.append([evaluation.rbc, evaluation.wbc])
+
+    for evaluation in db.session.query(Evaluation).filter(Evaluation.result < 0.8).all():
+        data_safe.append([evaluation.rbc, evaluation.wbc])
+
+    # 获取Evaluation的总数
+    total = Evaluation.query.count()
+    gender_data = []
+    gender_data.append(['Male', suspected_male / total])
+    gender_data.append(['Female', suspected_female / total])
+
+
+    #----------------------- 在这里填写data_map，格式为data_sample的格式 -----------------------------
+
+    for evaluation in Evaluation.query.all():
+        print(evaluation.continent, evaluation.country, evaluation.result)
+
+    data_sample = {
+        "Asia": {
+            "Sri Lanka": {
+                "Suspected": "75",
+                "Normal": "2"
+            },
+            "Bangladesh": {
+                "Suspected": "7",
+                "Normal": "20"
+            }
+        },
+        "Europe": {
+            "Poland": {
+                "Suspected": "1",
+                "Normal": "0"
+            },
+            "Norway": {
+                "Suspected": "1",
+                "Normal": "0"
+            },
+            "Germany": {
+                "Suspected": "12",
+                "Normal": "21"
+            }
+        }
+    }
+
+    data_map = data_sample
+
+    #---------------------------------------------------------------------
+
+    # 下面这一行中的 xxx=xxx 语句是把 xxx 传递到html，这样在html里就可以用 " {{ xxx }} " 的方式引用传过去的变量了
+    return render_template('dashboards.html', gender_data=gender_data, data_0=data_0, data_1=data_1, data_susp=data_susp, data_safe=data_safe, data_map=data_map)
 
 @app.route('/patient_profile/<int:unit_id>', methods=['GET', 'POST'])
 @login_required
@@ -369,9 +449,9 @@ def add_evaluation():
     if form.validate_on_submit():
         # load model
         model = evaluator.load_model()
-        field_names = ['gender', 'age', 'contact_history', 'acid_test', 'x_ray', 'wbc', 'rbc', 'hgb']
+        field_names = ['gender', 'age', 'contact_history', 'acid_test', 'x_ray', 'wbc', 'rbc', 'hgb', 'continent', 'country']
         datas = {field_name: getattr(form, field_name).data for field_name in field_names}
-        result = evaluator.estimate(model, datas)
+        result = round(evaluator.estimate(model, datas), 5)
         evaluation = Evaluation(**datas, result=result)
         db.session.add(evaluation)
         db.session.commit()
