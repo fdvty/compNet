@@ -68,8 +68,34 @@ def dashboards():
         else:
             addtodict3(data_map, evaluation.continent, evaluation.country, "Normal")
 
-    # print(data_map)
-    #---------------------------------------------------------------------------------------------
+    print(data_map)
+
+    # data_sample = {
+    #     "Asia": {
+    #         "Sri Lanka": {
+    #             "Suspected": "75",
+    #             "Normal": "2"
+    #         },
+    #         "Bangladesh": {
+    #             "Suspected": "7",
+    #             "Normal": "20"
+    #         }
+    #     },
+    #     "Europe": {
+    #         "Poland": {
+    #             "Suspected": "1",
+    #             "Normal": "0"
+    #         },
+    #         "Norway": {
+    #             "Suspected": "1",
+    #             "Normal": "0"
+    #         },
+    #     }
+    # }
+    #
+    # data_map = data_sample
+
+    #---------------------------------------------------------------------
 
     # 下面这一行中的 xxx=xxx 语句是把 xxx 传递到html，这样在html里就可以用 " {{ xxx }} " 的方式引用传过去的变量了
     return render_template('dashboards.html', gender_data=gender_data, data_0=data_0, data_1=data_1, data_susp=data_susp, data_safe=data_safe, data_map=data_map)
