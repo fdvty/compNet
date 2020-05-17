@@ -4,7 +4,7 @@ from app import app, avatars, db
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Unit, Record, Evaluation
 from app.email import send_password_reset_email
-from app.utils import redirect_back, flash_errors, delete_avatar
+from app.utils import redirect_back, flash_errors, delete_avatar, addtodict3
 from app.forms import LoginForm, UnitForm, RegistrationForm, EditProfileForm, RecordForm, \
     ResetPasswordForm, ResetPasswordRequestForm, UploadAvatarForm, CropAvatarForm, AddRecordForm, \
     EvaluateForm
@@ -61,39 +61,15 @@ def dashboards():
 
     #----------------------- 在这里填写data_map，格式为data_sample的格式 -----------------------------
 
+    data_map = {}
     for evaluation in Evaluation.query.all():
-        print(evaluation.continent, evaluation.country, evaluation.result)
+        if(evaluation.result >= 0.8):
+            addtodict3(data_map, evaluation.continent, evaluation.country, "Suspected")
+        else:
+            addtodict3(data_map, evaluation.continent, evaluation.country, "Normal")
 
-    data_sample = {
-        "Asia": {
-            "Sri Lanka": {
-                "Suspected": "75",
-                "Normal": "2"
-            },
-            "Bangladesh": {
-                "Suspected": "7",
-                "Normal": "20"
-            }
-        },
-        "Europe": {
-            "Poland": {
-                "Suspected": "1",
-                "Normal": "0"
-            },
-            "Norway": {
-                "Suspected": "1",
-                "Normal": "0"
-            },
-            "Germany": {
-                "Suspected": "12",
-                "Normal": "21"
-            }
-        }
-    }
-
-    data_map = data_sample
-
-    #---------------------------------------------------------------------
+    # print(data_map)
+    #---------------------------------------------------------------------------------------------
 
     # 下面这一行中的 xxx=xxx 语句是把 xxx 传递到html，这样在html里就可以用 " {{ xxx }} " 的方式引用传过去的变量了
     return render_template('dashboards.html', gender_data=gender_data, data_0=data_0, data_1=data_1, data_susp=data_susp, data_safe=data_safe, data_map=data_map)

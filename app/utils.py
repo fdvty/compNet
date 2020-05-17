@@ -51,3 +51,16 @@ def delete_avatar(filename):
     if filename:
         directory = current_app.config['AVATARS_SAVE_PATH']
         delete_file(directory, filename)
+
+
+def addtodict3(thedict,key_a,key_b,key_c):
+    if key_a in thedict:
+        if key_b in thedict[key_a]:
+            if key_c in thedict[key_a][key_b]:
+                thedict[key_a][key_b][key_c] += 1
+            else:
+                thedict[key_a][key_b].update({key_c:1})
+        else:
+            thedict[key_a].update({key_b:{key_c:1}})
+    else:
+        thedict.update({key_a:{key_b:{key_c:1}}})
