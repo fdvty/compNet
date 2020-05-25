@@ -29,4 +29,4 @@ class Config(object):
 	ADMIN_EMAIL = "zirui.liu@pku.edu.cn"
 
 	# AVATARS_SAVE_PATH = '/root/compNet/app/static/images/avatars'
-	AVATARS_SAVE_PATH = '/Users/apple/compNet/SmartClinic/compNet/app/static/images/avatars'
+	AVATARS_SAVE_PATH = '/root/compNet/app/static/images/avatars'
