@@ -31,7 +31,7 @@ We also provide a version without Docker.
    sudo apt install docker-ce docker-ce-cli containerd.io
    ~~~
 
-   Refer this document for more details.
+   Refer [Docker's official website](https://docs.docker.com/get-docker/) for more details.
 
 2. Download image from  [Docker Hub](https://hub.docker.com/).
 
