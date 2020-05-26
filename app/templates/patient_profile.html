@@ -12,7 +12,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
                         </button>
                         <h4 class="modal-title" id="myModalLabel">
-                            Add Clinical Record for {{ unit.name }}
+                            为 {{ unit.name }} 添加病历记录
                         </h4>
                     </div>
                     <div class="modal-body">
@@ -20,7 +20,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">
-                            Close
+                            关闭
                         </button>
                     </div>
                 </div><!-- /.modal-content -->
@@ -38,21 +38,21 @@
                 <h1>
                     {{ unit.name }}
                 </h1>
-                <b>Gender: </b>{% if unit.gender == 1 %}F{% else %}M{% endif %}<br>
-                <b>Age: </b>{{ unit.age }}<br>
-                <b>Height: </b>{{ unit.height }} (cm)<br>
-                <b>Weight: </b>{{ unit.weight }} (kg)<br>
-                <b>Comment: </b>{{ unit.comment }}
+                <b>性别: </b>{% if unit.gender == 1 %}F{% else %}M{% endif %}<br>
+                <b>年龄: </b>{{ unit.age }}<br>
+                <b>身高: </b>{{ unit.height }} (cm)<br>
+                <b>体重: </b>{{ unit.weight }} (kg)<br>
+                <b>备注: </b>{{ unit.comment }}
             </td>
         </tr>
     </table>
 
 <!--<br>-->
     <div class="page-header">
-        <h3>Records
+        <h3>病历记录
             {% if form %}
             <div style="float:right;">
-                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addRecord">New Record</button>
+                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addRecord">没有病历</button>
             </div>
             {% endif %}
         </h3>
@@ -66,22 +66,22 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
                             </button>
-                            <h3 class="modal-title" id="myModalLabel"><img src="{{ record.owner.avatar(70) }}" /> {{ record.owner.name }}'s Clinical Record </h3>
+                            <h3 class="modal-title" id="myModalLabel"><img src="{{ record.owner.avatar(70) }}" /> {{ record.owner.name }} 的病历记录 </h3>
                         </div>
                         <div class="modal-body">
-                            <b>Abstract:</b><div align="left">{{ record.body }}</div>
-                            <b>Chief Complaint:</b><br><div align="left">{{ record.complaint }}</div>
-                            <b>Medical History:</b><br><div align="left"> {{ record.history }}</div>
-                            <b>Test Results:</b><br><div align="left"> {{ record.results }}</div>
-                            <b>Assessment:</b><br><div align="left"> {{ record.assessment }}</div>
-                            <b>Plan:</b><br><div align="left"> {{ record.plan }}</div>
-                            <b>Prescriptions:</b><br><div align="left">{{ record.prescriptions }}</div>
-                            <b>Demographics:</b><br><div align="left">{{ record.demographics }}</div>
+                            <b>摘要:</b><div align="left">{{ record.body }}</div>
+                            <b>主诉:</b><br><div align="left">{{ record.complaint }}</div>
+                            <b>诊断史:</b><br><div align="left"> {{ record.history }}</div>
+                            <b>检验结果:</b><br><div align="left"> {{ record.results }}</div>
+                            <b>医生评估:</b><br><div align="left"> {{ record.assessment }}</div>
+                            <b>治疗计划:</b><br><div align="left"> {{ record.plan }}</div>
+                            <b>处方:</b><br><div align="left">{{ record.prescriptions }}</div>
+                            <b>人口统计学数据:</b><br><div align="left">{{ record.demographics }}</div>
                         </div>
                         <div class="modal-footer">
-                            <div align="left" style="float:left"> Added by Dr.
-                                <a href="{{ url_for('user', username=record.author.username) }}">{{ record.author.username }}</a>
-                                at {{ moment(record.timestamp).fromNow() }}.
+                            <div align="left" style="float:left"> 本条记录由
+                                <a href="{{ url_for('user', username=record.author.username) }}">{{ record.author.username }}</a> 医生在
+                                {{ moment(record.timestamp).fromNow() }} 添加
                             </div>
                             <button type="button" class="btn btn-default" data-dismiss="modal">
                                 Close
@@ -99,12 +99,12 @@
                         </a>
                     </td>
                     <td>
-                        Dr. <a href="{{ url_for('user', username=record.author.username) }}">
+                        本条记录由 <a href="{{ url_for('user', username=record.author.username) }}">
                             {{ record.author.username }}
-                        </a>
-                            added at {{ moment(record.timestamp).fromNow() }}:
+                        </a> 医生在
+                            {{ moment(record.timestamp).fromNow() }} 添加
                         <div style="float:right;">
-                            <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModal{{ loop.index }}">Details</button>
+                            <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModal{{ loop.index }}">详情</button>
                         </div>
                         <br>
                         <b>{{ record.body }}</b>
@@ -114,6 +114,6 @@
         {% endfor %}
         <div class="page-footer">{{ render_pagination(pagination) }}</div>
     {% else %}
-        <div class="tip">No Records.</div>
+        <div class="tip">没有记录</div>
     {% endif %}
 {% endblock %}

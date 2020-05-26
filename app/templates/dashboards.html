@@ -38,8 +38,8 @@
             cause_p,
             cause_i,
             cause_name = [];
-        cause_name['Suspected'] = 'Suspected Cases';
-        cause_name['Normal'] = 'Normal Cases';
+        cause_name['Suspected'] = '疑似病例';
+        cause_name['Normal'] = '正常';
         region_i = 0;
         for (var region in data) {
             region_val = 0;
@@ -79,11 +79,11 @@
        };
 
        var title = {
-          text: 'Geographical Distribution of submitted cases'
+          text: '所有提交病例的地理分布'
        };
 
        var subtitle = {
-          text: 'click for detailed data'
+          text: '数据包含：所有提交的快速诊断记录'
        };
 
        var series = [{
@@ -121,10 +121,10 @@
            plotShadow: false
        };
        var title = {
-          text: 'Gender Statistics of COVID-19 Suspected Cases'
+          text: 'COVID-19疑似病例的性别统计数据'
        };
        var subtitle = {
-          text: 'Cases with Predicted Sick Probability >= 80%'
+          text: '数据包含：预测患病概率 >= 80% 的病例'
        };
        var tooltip = {
           pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -144,7 +144,7 @@
        };
        var series= [{
           type: 'pie',
-          name: 'Gender ratio',
+          name: '性别占比',
           data: {{ gender_data | tojson }}
        }];
        Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
@@ -175,13 +175,13 @@
           type: 'bar'
        };
        var title = {
-          text: 'Age Statistics of COVID-19 Suspected Cases'
+          text: 'COVID-19疑似病例的年龄统计数据'
        };
        var subtitle = {
-          text: 'Cases with Predicted Sick Probability >= 80%'
+          text: '数据包含：预测患病概率 >= 80% 的病例'
        };
        var xAxis = {
-          categories: ['Age 0~19', 'Age 20~39', 'Age 40~59', 'Age 60~79', 'Age 80+'],
+          categories: ['年龄段 0~19 岁', '年龄段 20~39 岁', '年龄段 40~59 岁', '年龄段 60~79 岁', '年龄段 80+ 岁'],
           title: {
              text: null
           }
@@ -189,7 +189,7 @@
        var yAxis = {
           min: 0,
           title: {
-             text: 'Case',
+             text: '病例数量',
              align: 'high'
           },
           labels: {
@@ -222,10 +222,10 @@
        };
 
        var series= [{
-             name: 'Male',
+             name: '男性',
                 data: {{ data_0 | tojson }}
             }, {
-                name: 'Female',
+                name: '女性',
                 data: {{ data_1 | tojson }}
             }
        ];
@@ -253,10 +253,10 @@
           zoomType: 'xy'
        };
        var title = {
-          text: 'Blood Test Results (Rbc, Wbc) in submitted cases'
+          text: '所有提交病例的血常规测试结果 (Rbc, Wbc)'
        };
        var subtitle = {
-          text: 'All Cases'
+          text: '数据包含：所有提交的快速诊断记录'
        };
        var xAxis = {
           title: {
@@ -307,12 +307,12 @@
           }
        };
        var series= [{
-                name: 'Suspected',
+                name: '疑似病例',
                 color: 'rgba(223, 83, 83, .5)',
                 data: {{ data_susp | tojson }}
 
             }, {
-                name: 'Normal',
+                name: '正常',
                 color: 'rgba(119, 152, 191, .5)',
                 data: {{ data_safe | tojson }}
           }
@@ -335,7 +335,7 @@
 {% endblock %}
 
 {% block app_content %}
-    <h1 align="center">Statistics of Submitted Cases</h1>
+    <h1 align="center">数据库中快速诊断记录的统计数据</h1>
     <hr>
     <div id="container_pie" style="width: 550px; height: 400px; margin: 0 auto"></div>
     <hr>

@@ -5,11 +5,11 @@ from app.models import User, Unit
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 
 class UploadAvatarForm(FlaskForm):
-    image = FileField(label='Upload Image', validators=[
+    image = FileField(label='上传图片', validators=[
         FileRequired(),
-        FileAllowed(['jpg', 'png'], 'The file format should be .jpg or .png.')
+        FileAllowed(['jpg', 'png'], '只允许 .jpg 或 .png 格式的图片')
     ])
-    submit = SubmitField(label='Upload')
+    submit = SubmitField(label='上传')
 
 
 class CropAvatarForm(FlaskForm):
@@ -17,37 +17,37 @@ class CropAvatarForm(FlaskForm):
     y = HiddenField()
     w = HiddenField()
     h = HiddenField()
-    submit = SubmitField('Crop and Update')
+    submit = SubmitField('裁剪并更新')
 
 class LoginForm(FlaskForm):
-	username = StringField('Username', validators=[DataRequired()])
-	password = PasswordField('Password', validators=[DataRequired()])
-	remember_me = BooleanField('Remember Me')
-	submit = SubmitField('Sign In')
+	username = StringField('用户名', validators=[DataRequired()])
+	password = PasswordField('密码', validators=[DataRequired()])
+	remember_me = BooleanField('记住我')
+	submit = SubmitField('登陆')
 
 class RegistrationForm(FlaskForm):
-	username = StringField('Username', validators=[DataRequired()])
-	email = StringField('Email', validators=[DataRequired(), Email()])
-	password = PasswordField('Password', validators=[DataRequired()])
+	username = StringField('用户名', validators=[DataRequired()])
+	email = StringField('电子邮箱', validators=[DataRequired(), Email()])
+	password = PasswordField('密码', validators=[DataRequired()])
 	password2 = PasswordField(
-		'Repeat Password', validators=[DataRequired(), EqualTo('password')])
-	submit = SubmitField('Register')
+		'重复密码', validators=[DataRequired(), EqualTo('password')])
+	submit = SubmitField('注册')
 
 	def validate_username(self, username):
 		user = User.query.filter_by(username=username.data).first()
 		if user is not None:
-			raise ValidationError('Username has already been used. Please use a different username.')
+			raise ValidationError('用户名已经被使用，请换一个不同的用户名。')
 
 	def validate_email(self, email):
 		user = User.query.filter_by(email=email.data).first()
 		if user is not None:
-			raise ValidationError('Email has already been registered. Please use a different email address.')
+			raise ValidationError('电子邮箱已经被使用，请换一个不同的电子邮箱。')
 
 
 class EditProfileForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    about_me = TextAreaField('About me', validators=[Length(min=0, max=140)])
-    submit = SubmitField('Submit')
+    username = StringField('用户名', validators=[DataRequired()])
+    about_me = TextAreaField('关于我', validators=[Length(min=0, max=140)])
+    submit = SubmitField('提交')
 
     def __init__(self, original_username, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)
@@ -57,64 +57,64 @@ class EditProfileForm(FlaskForm):
         if username.data != self.original_username:
             user = User.query.filter_by(username=self.username.data).first()
             if user is not None:
-                raise ValidationError('Username has already been used. Please use a different username.')
+                raise ValidationError('用户名已经被使用，请换一个不同的用户名。')
 
 
 
 class UnitForm(FlaskForm):
-    name = TextAreaField('Name', validators=[DataRequired(), Length(min=1, max=40)])
-    gender = SelectField("Gender", coerce=int, choices=[(0, 'M'), (1, "F")])
-    age = IntegerField('Age', validators=[DataRequired()])
-    height = FloatField("Height(cm)", validators=[DataRequired()])
-    weight = FloatField("Weight(kg)", validators=[DataRequired()])
-    comment = TextAreaField('Comment', validators=[DataRequired(), Length(min=1, max=140)])
-    submit = SubmitField('Submit')
+    name = TextAreaField('姓名', validators=[DataRequired(), Length(min=1, max=40)])
+    gender = SelectField("性别", coerce=int, choices=[(0, '男'), (1, "女")])
+    age = IntegerField('年龄', validators=[DataRequired()])
+    height = FloatField("身高(cm)", validators=[DataRequired()])
+    weight = FloatField("体重(kg)", validators=[DataRequired()])
+    comment = TextAreaField('备注', validators=[DataRequired(), Length(min=1, max=140)])
+    submit = SubmitField('提交')
 
 class RecordForm(FlaskForm):
-    body = TextAreaField('Abstract', validators=[DataRequired(), Length(min=1, max=140)])
-    complaint = TextAreaField('Chief Complaint', validators=[DataRequired(), Length(min=1, max=140)])
-    history = TextAreaField('Medical History', validators=[DataRequired(), Length(min=1, max=140)])
-    results = TextAreaField('Examination Results', validators=[DataRequired(), Length(min=1, max=140)])
-    assessment = TextAreaField('Doctor\'s Assessment', validators=[DataRequired(), Length(min=1, max=140)])
-    plan = TextAreaField('Treatment Plans', validators=[DataRequired(), Length(min=1, max=140)])
-    prescriptions = TextAreaField('Prescriptions', validators=[DataRequired(), Length(min=1, max=140)])
-    demographics = TextAreaField('Demographics', validators=[DataRequired(), Length(min=1, max=140)])
-    submit = SubmitField('Submit')
+    body = TextAreaField('摘要', validators=[DataRequired(), Length(min=1, max=140)])
+    complaint = TextAreaField('主诉', validators=[DataRequired(), Length(min=1, max=140)])
+    history = TextAreaField('诊断史', validators=[DataRequired(), Length(min=1, max=140)])
+    results = TextAreaField('检验结果', validators=[DataRequired(), Length(min=1, max=140)])
+    assessment = TextAreaField('医生评估', validators=[DataRequired(), Length(min=1, max=140)])
+    plan = TextAreaField('治疗计划', validators=[DataRequired(), Length(min=1, max=140)])
+    prescriptions = TextAreaField('处方', validators=[DataRequired(), Length(min=1, max=140)])
+    demographics = TextAreaField('人口统计学数据', validators=[DataRequired(), Length(min=1, max=140)])
+    submit = SubmitField('提交')
 
 class AddRecordForm(FlaskForm):
-    unit_id = SelectField('Patient', coerce=int)
-    body = TextAreaField('Abstract', validators=[DataRequired(), Length(min=1, max=140)])
-    complaint = TextAreaField('Chief Complaint', validators=[DataRequired(), Length(min=1, max=140)])
-    history = TextAreaField('Medical History', validators=[DataRequired(), Length(min=1, max=140)])
-    results = TextAreaField('Examination Results', validators=[DataRequired(), Length(min=1, max=140)])
-    assessment = TextAreaField('Doctor\'s Assessment', validators=[DataRequired(), Length(min=1, max=140)])
-    plan = TextAreaField('Treatment Plans', validators=[DataRequired(), Length(min=1, max=140)])
-    prescriptions = TextAreaField('Prescriptions', validators=[DataRequired(), Length(min=1, max=140)])
-    demographics = TextAreaField('Demographics', validators=[DataRequired(), Length(min=1, max=140)])
-    submit = SubmitField('Submit')
+    unit_id = SelectField('病人', coerce=int)
+    body = TextAreaField('摘要', validators=[DataRequired(), Length(min=1, max=140)])
+    complaint = TextAreaField('主诉', validators=[DataRequired(), Length(min=1, max=140)])
+    history = TextAreaField('诊断史', validators=[DataRequired(), Length(min=1, max=140)])
+    results = TextAreaField('检验结果', validators=[DataRequired(), Length(min=1, max=140)])
+    assessment = TextAreaField('医生评估', validators=[DataRequired(), Length(min=1, max=140)])
+    plan = TextAreaField('治疗计划', validators=[DataRequired(), Length(min=1, max=140)])
+    prescriptions = TextAreaField('处方', validators=[DataRequired(), Length(min=1, max=140)])
+    demographics = TextAreaField('人口统计学数据', validators=[DataRequired(), Length(min=1, max=140)])
+    submit = SubmitField('提交')
 
 
 class EvaluateForm(FlaskForm):
-    gender = SelectField("Gender", coerce=int, choices=[(0, 'M'), (1, "F")])
-    age = IntegerField('Age', validators=[DataRequired()])
-    contact_history = SelectField("Contact with Pneumonia Patients", coerce=int, choices=[(0, 'N'), (1, "Y")])
-    acid_test = SelectField("Nucleci Acid Testing", coerce=int, choices=[(0, 'Negative'), (1, 'Positive')])
-    x_ray = SelectField("X-ray Testing", coerce=int, choices=[(0, 'Negative'), (1, 'Positive')])
-    wbc = FloatField("WBC(White Blood Cells)", validators=[DataRequired()])
-    rbc = FloatField("RBC(Red Blood Cells)", validators=[DataRequired()])
-    hgb = FloatField("HGB(Hemoglobin)", validators=[DataRequired()])
-    continent = StringField('Continent', validators=[DataRequired()])
-    country = StringField('Country', validators=[DataRequired()])
-    submit = SubmitField('Submit')
+    gender = SelectField("性别", coerce=int, choices=[(0, '男'), (1, "女")])
+    age = IntegerField('年龄', validators=[DataRequired()])
+    contact_history = SelectField("是否接触过COVID-19感染者", coerce=int, choices=[(0, '否'), (1, "是")])
+    acid_test = SelectField("核酸检测结果", coerce=int, choices=[(0, '阴性'), (1, '阳性')])
+    x_ray = SelectField("X光检测结果", coerce=int, choices=[(0, '阴性'), (1, '阳性')])
+    wbc = FloatField("WBC(白细胞数量)", validators=[DataRequired()])
+    rbc = FloatField("RBC(红细胞数量)", validators=[DataRequired()])
+    hgb = FloatField("HGB(血红蛋白数量)", validators=[DataRequired()])
+    continent = StringField('洲', validators=[DataRequired()])
+    country = StringField('国家', validators=[DataRequired()])
+    submit = SubmitField('提交')
 
 
 class ResetPasswordRequestForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    submit = SubmitField('Request Password Reset')
+    email = StringField('电子邮箱', validators=[DataRequired(), Email()])
+    submit = SubmitField('发送重置密码邮件')
 
 
 class ResetPasswordForm(FlaskForm):
-    password = PasswordField('Password', validators=[DataRequired()])
+    password = PasswordField('密码', validators=[DataRequired()])
     password2 = PasswordField(
-        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Request Password Reset')
+        '重复密码', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('重置密码')

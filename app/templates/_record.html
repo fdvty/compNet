@@ -8,14 +8,14 @@
             </a>
         </td>
         <td>
-            Dr. <a href="{{ url_for('user', username=record.author.username) }}">
+            本记录由 <a href="{{ url_for('user', username=record.author.username) }}">
                 {{ record.author.username }}
-            </a>
-                added at {{ moment(record.timestamp).fromNow() }}:
+            </a> 医生在
+                 {{ moment(record.timestamp).fromNow() }} 添加
             <br>
-            <b>Name: </b>{{ record.owner.name }}
+            <b>患者姓名: </b>{{ record.owner.name }}
             <br>
-            <b>Abstract: </b>{{ record.body }}
+            <b>摘要: </b>{{ record.body }}
         </td>
     </tr>
 </table>

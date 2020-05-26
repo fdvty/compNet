@@ -5,10 +5,10 @@
 
 {% block app_content %}
 <div class="page-header">
-    <h1>Patients
+    <h1>病人清单
         <small class="text-muted">{{ pagination.total }}</small>
         <div style="float:right;">
-            <a class="btn btn-primary btn-sm" href="{{ url_for('unit_add', next=request.full_path) }}">Add Patient</a>
+            <a class="btn btn-primary btn-sm" href="{{ url_for('unit_add', next=request.full_path) }}">添加新病人</a>
         </div>
     </h1>
 </div>
@@ -19,9 +19,9 @@
     <div class="row">
         <div class="col-lg-6">
             <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="search by name...">
+                <input type="text" name="q" class="form-control" placeholder="请输入您想要搜索的病人名字">
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="submit">Search!</button>
+                    <button class="btn btn-default" type="submit">搜索</button>
                 </span>
             </div><!-- /input-group -->
         </div><!-- /.col-lg-6 -->
@@ -37,14 +37,14 @@
 <table id = "table" class="table table-striped"  data-filter-control="true" data-show-clear="true">
     <thead>
     <tr>
-        <th data-field="id">No.</th>
-        <th data-field="avatar">Avatar</th>
-        <th data-field="name" data-filter-control="input">Name</th>
-        <th data-field="age" data-filter-control="select">Age</th>
-        <th data-field="timestamp" data-filter-control="input">Last Modified</th>
-        <th data-field="owner" data-filter-control="input">Added by</th>
-        <th data-field="comment" data-filter-control="input">Comment</th>
-        <th>Actions</th>
+        <th data-field="id">序号</th>
+        <th data-field="avatar">头像</th>
+        <th data-field="name" data-filter-control="input">姓名</th>
+        <th data-field="age" data-filter-control="select">年龄</th>
+        <th data-field="timestamp" data-filter-control="input">上次修改时间</th>
+        <th data-field="owner" data-filter-control="input">负责的医生</th>
+        <th data-field="comment" data-filter-control="input">备注</th>
+        <th>操作</th>
     </tr>
     </thead>
     {% for unit in units %}
@@ -54,21 +54,21 @@
         <td><a href="{{ url_for('patient_profile', unit_id=unit.id, next=request.full_path) }}">{{ unit.name }}</a></td>
         <td>{{ unit.age }}</td>
         <td>{{ moment(unit.timestamp).format('LLL') }}</td>
-        <td><a href="{{ url_for('user', username=unit.owner.username) }}">{{ unit.owner.username }}{% if unit.owner.can('ADMINISTER') %} (Admin){% endif %}</a></td>
+        <td><a href="{{ url_for('user', username=unit.owner.username) }}">{{ unit.owner.username }}{% if unit.owner.can('ADMINISTER') %} (管理员){% endif %}</a></td>
         <td>{{ unit.comment }}</td>
         {% if (unit.owner == current_user) or (current_user.can('ADMINISTER')) %}
         <td>
 <!--            <a class="btn btn-primary btn-sm" href="{{ url_for('patient_profile', unit_id=unit.id, next=request.full_path) }}">Records</a>-->
-            <a class="btn btn-info btn-sm" href="{{ url_for('unit_edit', unit_id=unit.id, next=request.full_path) }}">Edit</a>
+            <a class="btn btn-info btn-sm" href="{{ url_for('unit_edit', unit_id=unit.id, next=request.full_path) }}">编辑</a>
             <form style="display: inline" class="inline" method="post" action="{{ url_for('unit_delete', unit_id=unit.id, next=request.full_path) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</button>
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('你确定要删除吗?');">删除</button>
             </form>
         </td>
         {% else %}
         <td>
-            <button class="btn btn-info btn-sm disabled" >Edit</button>
-            <button class="btn btn-danger btn-sm disabled">Delete</button>
+            <button class="btn btn-info btn-sm disabled" >编辑</button>
+            <button class="btn btn-danger btn-sm disabled">删除</button>
         </td>
         {% endif %}
     </tr>

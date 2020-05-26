@@ -4,10 +4,10 @@
 
 {% block app_content %}
     <h1>
-        Evaluations
+        快速诊断
         <small class="text-muted">{{ pagination.total }}</small>
         <div style="float:right;">
-            <a class="btn btn-primary btn-sm" href="{{ url_for('add_evaluation', next=request.full_path) }}">Add Evaluation</a>
+            <a class="btn btn-primary btn-sm" href="{{ url_for('add_evaluation', next=request.full_path) }}">开始新的快速诊断</a>
         </div>
     </h1>
     <hr>
@@ -17,17 +17,17 @@
 <table id = "table" class="table table-striped"  data-filter-control="true" data-show-clear="true">
     <thead>
     <tr>
-        <th data-field="id">No.</th>
-        <th>Result</th>
-        <th>Gender</th>
-        <th>Age</th>
-        <th>Contact History</th>
-        <th>Nuclei Acid Test</th>
-        <th>X-Ray Test</th>
-        <th>WBC</th>
-        <th>RBC</th>
-        <th>HGB</th>
-        <th>Actions</th>
+        <th data-field="id">序号</th>
+        <th>患COVID-19概率</th>
+        <th>性别</th>
+        <th>年龄</th>
+        <th>是否接触过患病者</th>
+        <th>核算检测结果</th>
+        <th>X光检测结果</th>
+        <th>WBC（白细胞）</th>
+        <th>RBC（红细胞）</th>
+        <th>HGB（血红蛋白）</th>
+        <th>操作</th>
     </tr>
     </thead>
     {% for evaluation in evaluations %}
@@ -40,19 +40,19 @@
                         <h3 class="modal-title" id="myModalLabel">Quick Diagnostic Evaluation</h3>
                     </div>
                     <div class="modal-body">
-                        <b>Result:</b><div align="left">{{ evaluation.result }}</div>
-                        <b>Gender:</b><br><div align="left">{% if evaluation.gender == 0 %}M{% else %}F{% endif %}</div>
-                        <b>Age:</b><br><div align="left"> {{ evaluation.age }}</div>
-                        <b>Contacted with Confirmed Patients?</b><br><div align="left"> {% if evaluation.contact_history == 0 %}No{% else %}Yes{% endif %}</div>
-                        <b>Nuclei Acid Test:</b><br><div align="left"> {% if evaluation.acid_test == 0 %}Negative{% else %}Positive{% endif %}</div>
-                        <b>X-Ray Test:</b><br><div align="left"> {% if evaluation.x_ray == 0 %}Negative{% else %}Positive{% endif %}</div>
-                        <b>WBC(White Blood Cells):</b><br><div align="left">{{ evaluation.wbc }}</div>
-                        <b>RBC(Red Blood Cells):</b><br><div align="left">{{ evaluation.rbc }}</div>
-                        <b>HGB(Hemoglobin):</b><br><div align="left">{{ evaluation.hgb }}</div>
+                        <b>患COVID-19概率:</b><div align="left">{{ evaluation.result }}</div>
+                        <b>性别:</b><br><div align="left">{% if evaluation.gender == 0 %}男{% else %}女{% endif %}</div>
+                        <b>年龄:</b><br><div align="left"> {{ evaluation.age }}</div>
+                        <b>是否接触过患病者?</b><br><div align="left"> {% if evaluation.contact_history == 0 %}否{% else %}是{% endif %}</div>
+                        <b>核酸检测结果:</b><br><div align="left"> {% if evaluation.acid_test == 0 %}阴性{% else %}阳性{% endif %}</div>
+                        <b>X光检测结果:</b><br><div align="left"> {% if evaluation.x_ray == 0 %}阴性{% else %}阳性{% endif %}</div>
+                        <b>WBC（白细胞）:</b><br><div align="left">{{ evaluation.wbc }}</div>
+                        <b>RBC（红细胞）:</b><br><div align="left">{{ evaluation.rbc }}</div>
+                        <b>HGB（血红蛋白）:</b><br><div align="left">{{ evaluation.hgb }}</div>
                     </div>
                     <div class="modal-footer">
-                        <div align="left" style="float:left"> Added
-                            at {{ moment(evaluation.timestamp).fromNow() }}, From <b>{{ evaluation.country }}, {{ evaluation.continent }}</b>.
+                        <div align="left" style="float:left"> 本条记录在
+                             {{ moment(evaluation.timestamp).fromNow() }} 被添加, 病人的位置在 <b>{{ evaluation.country }}, {{ evaluation.continent }}</b>.
                         </div>
                         <button type="button" class="btn btn-default" data-dismiss="modal">
                             Close
@@ -64,23 +64,23 @@
     <tr>
         <td>{{ loop.index + ((page - 1) * config.UNITS_PER_PAGE) }}</td>
         <td>{{ evaluation.result }}</td>
-        <td>{% if evaluation.gender == 0 %}M{% else %}F{% endif %}</td>
+        <td>{% if evaluation.gender == 0 %}男{% else %}女{% endif %}</td>
         <td>{{ evaluation.age }}</td>
-        <td>{% if evaluation.contact_history == 0 %}No{% else %}Yes{% endif %}</td>
-        <td>{% if evaluation.acid_test == 0 %}Negative{% else %}Positive{% endif %}</td>
-        <td>{% if evaluation.x_ray == 0 %}Negative{% else %}Positive{% endif %}</td>
+        <td>{% if evaluation.contact_history == 0 %}否{% else %}是{% endif %}</td>
+        <td>{% if evaluation.acid_test == 0 %}阴性{% else %}阳性{% endif %}</td>
+        <td>{% if evaluation.x_ray == 0 %}阴性{% else %}阳性{% endif %}</td>
         <td>{{ evaluation.wbc }}</td>
         <td>{{ evaluation.rbc }}</td>
         <td>{{ evaluation.hgb }}</td>
         <td>
-            <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal{{ loop.index }}">Detail</button>
+            <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal{{ loop.index }}">详情</button>
             {% if (current_user.can('ADMINISTER')) %}
             <form style="display: inline" class="inline" method="post" action="{{ url_for('delete_evaluation', evaluation_id=evaluation.id, next=request.full_path) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</button>
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('你确定要删除这个记录吗?');">删除</button>
             </form>
             {% else %}
-            <button class="btn btn-danger btn-sm disabled">Delete</button>
+            <button class="btn btn-danger btn-sm disabled">删除</button>
             {% endif %}
         </td>
     </tr>
@@ -91,7 +91,7 @@
 <div class="page-footer">{{ render_pagination(pagination) }}</div>
 
 {% else %}
-    <div class="tip"><h5>No evaluations.</h5></div>
+    <div class="tip"><h5>没有快速诊断记录</h5></div>
 {% endif %}
 
 {% endblock %}

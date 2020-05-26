@@ -27,14 +27,14 @@
 
 
 {% block app_content %}
-    <h2 class="card-header">Change avatar for {{ unit.name }}!</h2>
+    <h2 class="card-header">为病人 {{ unit.name }} 修改头像</h2>
     <hr>
     <div class="card w-100 bg-light">
         <div class="card-body">
             {{ wtf.quick_form(upload_form, action=url_for('upload_avatar', unit_id=unit.id), button_map={'submit': 'info'}) }}
             <small class="text-muted">
                 <br>
-                Your file's size must be less than 3 MB, the allowed formats are png and jpg.
+                您的图片大小必须小于 3 MB，允许上传的格式是 png 和 jpg
             </small>
             <hr>
             {{ avatars.crop_box('get_avatar', unit.avatar_raw) }}

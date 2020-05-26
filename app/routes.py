@@ -55,8 +55,8 @@ def dashboards():
     # 获取Evaluation的总数
     total = Evaluation.query.count()
     gender_data = []
-    gender_data.append(['Male', suspected_male / total])
-    gender_data.append(['Female', suspected_female / total])
+    gender_data.append(['男性', suspected_male / total])
+    gender_data.append(['女性', suspected_female / total])
 
 
     #----------------------- 在这里填写data_map，格式为data_sample的格式 -----------------------------
@@ -111,7 +111,7 @@ def patient_profile(unit_id):
                         owner=unit, author=current_user)
         db.session.add(record)
         db.session.commit()
-        flash('Your record is now live!', category='info')
+        flash('新的病历记录已经被提交', category='info')
         return redirect(url_for('patient_profile', unit_id=unit.id))
     page = request.args.get('page', 1, type=int)
     pagination = unit.records.order_by(Record.timestamp.desc()).paginate(page, app.config['UNITS_PER_PAGE'], False)
@@ -147,7 +147,7 @@ def record_add():
                         owner=Unit.query.get(form.unit_id.data), author=current_user)
         db.session.add(record)
         db.session.commit()
-        flash('Your record is now live!', category='info')
+        flash('新的病历记录已经被提交', category='info')
         return redirect_back()
     page = request.args.get('page', 1, type=int)
     pagination = Record.query.order_by(Record.timestamp.desc()).paginate(
@@ -162,11 +162,11 @@ def record_add():
 def record_delete(record_id):
     record = Record.query.get(record_id)
     if(current_user != record.author and current_user.can('ADMINISTER') == False):
-        flash('Permission Denied.', 'warning')
+        flash('没有访问权限', 'warning')
         return redirect_back()
     db.session.delete(record)
     db.session.commit()
-    flash('Record deleted.', 'success')
+    flash('病历记录已经被删除', 'success')
     return redirect_back()
 
 @app.route('/record/<int:record_id>/edit', methods=['GET', 'POST'])
@@ -174,7 +174,7 @@ def record_delete(record_id):
 def record_edit(record_id):
     record = Record.query.get(record_id)
     if(current_user != record.author and current_user.can('ADMINISTER') == False):
-        flash('Permission Denied.', 'warning')
+        flash('没有访问权限', 'warning')
         return redirect_back()
     form = RecordForm()
     if form.validate_on_submit():
@@ -188,7 +188,7 @@ def record_edit(record_id):
         record.body = form.body.data
         record.timestamp = datetime.utcnow()
         db.session.commit()
-        flash('Your changes have been saved.', category='info')
+        flash('您的修改已经被提交', category='info')
         return redirect_back()
     elif request.method == 'GET':  # 这里要区分第一次请求表格的情况
         form.complaint.data = record.complaint
@@ -212,7 +212,7 @@ def unit_add():
                     weight=form.weight.data, age=form.age.data, owner=current_user)
         db.session.add(unit)
         db.session.commit()
-        flash('Your unit is now live!', category='info')
+        flash('新病人已经被添加', category='info')
         return redirect_back()
     page = request.args.get('page', 1, type=int)
     pagination = Unit.query.order_by(Unit.timestamp.desc()).paginate(
@@ -239,13 +239,13 @@ def unit_manage():
 def unit_delete(unit_id):
     unit = Unit.query.get(unit_id)
     if(current_user != unit.owner and current_user.can('ADMINISTER') == False):
-        flash('Permission Denied.', 'warning')
+        flash('没有访问权限', 'warning')
         return redirect_back()
     for record in Record.query.filter_by(owner=unit).all():
         db.session.delete(record)
     db.session.delete(unit)
     db.session.commit()
-    flash('Unit deleted.', 'success')
+    flash('病人已经被删除', 'success')
     return redirect_back()
 
 @app.route('/unit/<int:unit_id>/edit', methods=['GET', 'POST'])
@@ -253,7 +253,7 @@ def unit_delete(unit_id):
 def unit_edit(unit_id):
     unit = Unit.query.get(unit_id)
     if(current_user != unit.owner and current_user.can('ADMINISTER') == False):
-        flash('Permission Denied.', 'warning')
+        flash('没有访问权限', 'warning')
         return redirect_back()
     form = UnitForm()
     if form.validate_on_submit():
@@ -265,7 +265,7 @@ def unit_edit(unit_id):
         unit.height = form.height.data
         unit.weight = form.weight.data
         db.session.commit()
-        flash('Your changes have been saved.', category='info')
+        flash('您的修改已经被提交', category='info')
         return redirect_back()
     elif request.method == 'GET':  # 这里要区分第一次请求表格的情况
         form.name.data = unit.name
@@ -283,7 +283,7 @@ def unit_edit(unit_id):
 def change_avatar(unit_id):
     unit = Unit.query.get(unit_id)
     if (current_user != unit.owner and current_user.can('ADMINISTER') == False):
-        flash('Permission Denied.', 'warning')
+        flash('没有访问权限', 'warning')
         return redirect_back()
     upload_form = UploadAvatarForm()
     crop_form = CropAvatarForm()
@@ -301,7 +301,7 @@ def upload_avatar(unit_id):
         delete_avatar(unit.avatar_raw)
         unit.avatar_raw = filename
         db.session.commit()
-        flash('Image uploaded, please crop.', 'success')
+        flash('图片已经被上传，请裁剪', 'success')
     flash_errors(form)
     return redirect(url_for('change_avatar', unit_id=unit.id))
 
@@ -324,7 +324,7 @@ def crop_avatar(unit_id):
         unit.avatar_m = filenames[1]
         unit.avatar_l = filenames[2]
         db.session.commit()
-        flash('Avatar updated.', 'success')
+        flash('头像已经被更改', 'success')
         return redirect(url_for('patient_profile', unit_id=unit.id))
     flash_errors(form)
     return redirect(url_for('change_avatar', unit_id=unit.id))
@@ -342,7 +342,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password', category='warning')
+            flash('无效的用户名或密码', category='warning')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
@@ -368,7 +368,7 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Congratulations, you are now a registered user!', category='info')
+        flash('祝贺你！注册成功！', category='info')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -395,7 +395,7 @@ def edit_profile():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
         db.session.commit()
-        flash('Your changes have been saved.', category='info')
+        flash('您的修改已经被提交', category='info')
         return redirect_back()
     elif request.method == 'GET':  # 这里要区分第一次请求表格的情况
         form.username.data = current_user.username
@@ -412,9 +412,9 @@ def reset_password_request():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
             send_password_reset_email(user)
-            flash('Check your email for the instructions to reset your password', category='info')
+            flash('重置密码的邮件已经被发送', category='info')
         else:
-            flash('This mail has not been registered', category='warning')
+            flash('这个电子邮箱并没有被注册过', category='warning')
         return redirect(url_for('login'))
     return render_template('reset_password_request.html',
                            title='Reset Password', form=form)
@@ -431,7 +431,7 @@ def reset_password(token):
     if form.validate_on_submit():
         user.set_password(form.password.data)
         db.session.commit()
-        flash('Your password has been reset.', category='info')
+        flash('您的密码已经被重置', category='info')
         return redirect(url_for('login'))
     return render_template('reset_password.html', form=form)
 
@@ -457,7 +457,7 @@ def add_evaluation():
         evaluation = Evaluation(**datas, result=result)
         db.session.add(evaluation)
         db.session.commit()
-        flash('Your evaluation is now live!', category='success')
+        flash('您的快速诊断记录已经被提交', category='success')
         return redirect_back()
     return render_template('add_evaluation.html', title='Add Evaluate', form=form)
 
@@ -466,9 +466,9 @@ def add_evaluation():
 def delete_evaluation(evaluation_id):
     evaluation = Evaluation.query.get(evaluation_id)
     if(current_user.can('ADMINISTER') == False):
-        flash('Permission Denied.', 'warning')
+        flash('没有访问权限', 'warning')
         return redirect_back()
     db.session.delete(evaluation)
     db.session.commit()
-    flash('Evaluation deleted.', 'success')
+    flash('快速诊断记录已经被删除', 'success')
     return redirect_back()

@@ -7,16 +7,16 @@
                 </a>
             </td>
             <td>
-                <a href="{{ url_for('user', username=unit.owner.username) }}">
+                本病人由 <a href="{{ url_for('user', username=unit.owner.username) }}">
                     {{ unit.owner.username }}
-                </a>
-                added {{ moment(unit.timestamp).fromNow() }}:
+                </a> 医生在
+                 {{ moment(unit.timestamp).fromNow() }} 添加
                 <br>
                 <a href="{{ url_for('patient_profile', unit_id=unit.id) }}">
                     <b>{{ unit.name }}</b>
                 </a>
                 <br>
-                {{ unit.age }} years old
+                {{ unit.age }} 岁
                 <br>
                 {{ unit.comment }}
             </td>
