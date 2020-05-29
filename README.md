@@ -13,16 +13,16 @@ Here we explain the core documents in our project.
 
 * **app** : The Flask APP   
 app              
-├── __init__.py   // initialize Flask app  
-├── email.py      // send the reset password email  
-├── errors.py     // handle 404 and 505 errors  
-├── evaluator     // the neural network prediction model  
-├── forms.py      // define the forms  
-├── models.py     // define the classes used in database  
-├── routes.py     // routers, implement functions for different URLs  
-├── static        // static resources used by HTML templates  
-├── templates     // html templates and mail templates  
-└── utils.py      // assisting functions for routers  
+├── **\_\_init\_\_.py** : initialize Flask app  
+├── **email.py** : send the reset password email  
+├── **errors.py** : handle 404 and 505 errors  
+├── **evaluator** : the neural network prediction model  
+├── **forms.py** : define the forms  
+├── **models.py** : define the classes used in database  
+├── **routes.py** : routers, implement functions for different URLs  
+├── **static** : static resources used by HTML templates  
+├── **templates** : html templates and mail templates  
+└── **utils.py** : assisting functions for routers  
 
 * **config.py** : The parameters used in this project  
 * **requirements.txt** : The package requirements in this project  
@@ -67,7 +67,7 @@ We also provide a version without Docker.
    docker pull primavera/compnet
    ~~~
 
-####Usage
+#### Usage
 
 1. Create a container from the image.
 
