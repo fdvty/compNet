@@ -11,22 +11,21 @@ We have deployed this project [here](https://39.97.247.225/).
 
 Here we explain the core documents in our project. 
 
-* **app** : The Flask APP
-
+* **app** : The Flask APP   
 app              
-├── __init__.py     // initialize Flask app
-├── email.py        // send the reset password email
-├── errors.py       // handle 404 and 505 errors
-├── evaluator       // the neural network prediction model
-├── forms.py        // define the forms
-├── models.py       // define the classes used in database
-├── routes.py       // routers, implement functions for different URLs
-├── static          // static resources used by HTML templates
-├── templates       // html templates and mail templates
-└── utils.py        // assisting functions for routers
+├── __init__.py         // initialize Flask app  
+├── email.py            // send the reset password email  
+├── errors.py           // handle 404 and 505 errors  
+├── evaluator           // the neural network prediction model  
+├── forms.py            // define the forms  
+├── models.py           // define the classes used in database  
+├── routes.py           // routers, implement functions for different URLs  
+├── static              // static resources used by HTML templates  
+├── templates           // html templates and mail templates  
+└── utils.py            // assisting functions for routers  
 
-* **config.py** : The parameters used in this project
-* **requirements.txt** : The package requirements in this project
+* **config.py** : The parameters used in this project  
+* **requirements.txt** : The package requirements in this project  
 
 
 ## Deployment
