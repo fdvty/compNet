@@ -1,14 +1,43 @@
 # SmartClinic
 
-A project for 2020 PKU Computer Network.
+A project for 2020 PKU Computer Network. We build a new way to manage patients and clinical records. A neural 
+network prediction model is added to help you quickly identify COVID-19 carriers. 
 
-This project is based on Flask + Nginx + Gunicorn + Docker.  
+This project is based on Flask + Pytorch + Nginx + Gunicorn + Docker.
 
+We have deployed this project [here](https://39.97.247.225/).
+
+## File Structure
+
+Here we explain the core documents in our project. 
+
+* **app** : The Flask APP
+
+app              
+├── __init__.py     // initialize Flask app
+├── email.py        // send the reset password email
+├── errors.py       // handle 404 and 505 errors
+├── evaluator       // the neural network prediction model
+├── forms.py        // define the forms
+├── models.py       // define the classes used in database
+├── routes.py       // routers, implement functions for different URLs
+├── static          // static resources used by HTML templates
+├── templates       // html templates and mail templates
+└── utils.py        // assisting functions for routers
+
+* **config.py** : The parameters used in this project
+* **requirements.txt** : The package requirements in this project
+
+
+## Deployment
+
+We first show how to deploy our project using Docker.
+ 
 We also provide a version without Docker.
 
-## Setup(Docker Version)
+### Setup(Docker Version)
 
-### Installation
+#### Installation
 
 1. Install Docker.
 
@@ -39,7 +68,7 @@ We also provide a version without Docker.
    docker pull primavera/compnet
    ~~~
 
-### Usage
+####Usage
 
 1. Create a container from the image.
 
@@ -67,13 +96,13 @@ gunicorn -w 4 -b 127.0.0.1:8000 app:app
 
 ----
 
-## Setup(without Docker Version)
+### Setup(without Docker Version)
 
-### Requirement
+#### Requirement
 
 See file `requirements.txt`
 
-### Installation
+#### Installation
 
 1. Install virtualenv.
 
@@ -111,5 +140,14 @@ source ./venv/bin/activate
 gunicorn -w 4 -b 127.0.0.1:8000 app:app
 ~~~
 
+## Demos
+
+Here shows some of the operations. 
+
+
+
+## Authors
+
+* Zirui Liu, Wentao Wang, Xinyu Di
 
 
