@@ -13,16 +13,16 @@ Here we explain the core documents in our project.
 
 * **app** : The Flask APP   
 app              
-├── __init__.py         // initialize Flask app  
-├── email.py            // send the reset password email  
-├── errors.py           // handle 404 and 505 errors  
-├── evaluator           // the neural network prediction model  
-├── forms.py            // define the forms  
-├── models.py           // define the classes used in database  
-├── routes.py           // routers, implement functions for different URLs  
-├── static              // static resources used by HTML templates  
-├── templates           // html templates and mail templates  
-└── utils.py            // assisting functions for routers  
+├── __init__.py &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  // initialize Flask app  
+├── email.py    &emsp;&emsp;&emsp;&emsp;&emsp;// send the reset password email  
+├── errors.py   &emsp;&emsp;&emsp;          // handle 404 and 505 errors  
+├── evaluator   &emsp;&emsp;&emsp;         // the neural network prediction model  
+├── forms.py    &emsp;&emsp;&emsp;&emsp;         // define the forms  
+├── models.py   &emsp;         // define the classes used in database  
+├── routes.py   &emsp;&emsp;&emsp;         // routers, implement functions for different URLs  
+├── static      &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;         // static resources used by HTML templates  
+├── templates   &emsp;&emsp;         // html templates and mail templates  
+└── utils.py    &emsp;&emsp;&emsp;&emsp;&emsp;         // assisting functions for routers  
 
 * **config.py** : The parameters used in this project  
 * **requirements.txt** : The package requirements in this project  
@@ -141,8 +141,7 @@ gunicorn -w 4 -b 127.0.0.1:8000 app:app
 
 ## Demos
 
-Here shows some of the operations. 
-
+Here shows some of the operations of our project. 
 
 
 ## Authors
