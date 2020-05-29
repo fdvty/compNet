@@ -144,8 +144,5 @@ gunicorn -w 4 -b 127.0.0.1:8000 app:app
 Here shows some operations of our project. 
 
 
-## Authors
-
-* Zirui Liu, Wentao Wang, Xinyu Di
 
 
