@@ -27,6 +27,132 @@ app
 * **config.py** : The parameters used in this project  
 * **requirements.txt** : The package requirements in this project  
 
+## API Document
+
+* method: get, post  
+  url: '/' or '/index'  
+  return: render_template("home.html")  
+  description: render homepage  
+  
+* method: get, post  
+  url: '/login'   
+  return: render_template('login.html')   
+  description: login     
+
+* method: get  
+  url: '/logout'  
+  return: redirect(url_for('index'))  
+  description: logout   
+
+* method: get, post  
+  url: '/register'  
+  return: render_template('register.html')  
+  description: register a new user     
+  
+* method: get    
+  url: '/user/\<username\>'  
+  return: render_template('user.html')  
+  description: display a user's profile    
+
+* method: get, post      
+  url: '/edit_profile'  
+  return: render_template('edit_profile.html')  
+  description: edit a user's profile   
+  
+* method: get, post      
+  url: '/reset_password_request'  
+  return: render_template('reset_password_request.html')  
+  description: send reset password request mail  
+  
+* method: get, post      
+  url: '/reset_password/\<token\>'    
+  return: render_template('reset_password.html')  
+  description: reset password, token is used for encryption, it only remains valid for 5 minutes  
+    
+* method: get, post  
+  url: '/patient_profile/\<int: unit_id\>'  
+  return: render_template("patient_profile.html")  
+  description: render patient profile, and add clinical record for the patient  
+ 
+* method: get, post  
+  url: '/dashboards'  
+  return: render_template("dashboards.html")   
+  description: send the contents in database to HTML, display the contents in database  
+  
+* method: get
+  url: '/record/manage'  
+  return: render_template("manage_record.html")   
+  description: display clinical records in database   
+  
+* method: get, post  
+  url: '/record/add'    
+  return: render_template("add_record.html")  
+  description: add clinical record to database  
+ 
+* method: post  
+  url: '/record/\<int:record_id\>/delete'   
+  return: redirect_back()  
+  description: delete a clinical record with ID = record_id  
+  
+* method: get, post  
+  url: '/record/\<int:record_id\>/edit'  
+  return: render_template("edit_record.html")   
+  description: edit a clinical record that already exists in database, redirect back to the last page after editing operation    
+
+* method: get, post  
+  url: '/unit/add'   
+  return: render_template("add_unit.html")  
+  description: add a new patient to database and redirect back to the last page  
+  
+* method: get
+  url: '/unit/manage'   
+  return: render_template("manage_unit.html")    
+  description: display patients in database   
+  
+* method: post  
+  url: '/unit/\<int:unit_id\>/delete'  
+  return: redirect_back()   
+  description: delete a patient with ID = unit_id  
+  
+* method: get, post  
+  url: '/unit/\<int:unit_id\>/edit'
+  return: render_template("edit_unit.html")  
+  description: edit a patient's profile, redirect back to the last page after done  
+  
+* method: get   
+  url: '/unit/\<int:unit_id\>/settings/avatar'    
+  return: render_template("change_avatar.html")   
+  description: change avatar for a patient, redirect back after done   
+  
+* method: post  
+  url: '/unit/\<int:unit_id\>/settings/avatar/upload'   
+  return: redirect(url_for('change_avatar', unit_id=unit.id))    
+  description: upload avatar to database   
+  
+* method: post  
+  url: '/unit/\<int:unit_id\>/settings/avatar/crop'   
+  return: redirect(url_for('change_avatar', unit_id=unit.id))    
+  description: crop avatar in database  
+  
+* method: get  
+  url: '/avatars/\<path:filename\>'   
+  return: send_from_directory(app.config['AVATARS_SAVE_PATH'], filename)    
+  description: get avatar in database  
+  
+* method: get, post      
+  url: '/quick_evaluation'  
+  return: render_template('quick_evaluation.html')  
+  description: display the evaluation records in database  
+  
+* method: get, post      
+  url: '/add_evaluation'  
+  return: render_template('add_evaluation.html')  
+  description: add a new evaluation to database  
+  
+* method: post      
+  url: '/delete_evaluation/\<int:evaluation_id\>'  
+  return: redirect_back()   
+  description: delete a evaluation record with ID = evaluation_id in database  
 
 ## Deployment
 
