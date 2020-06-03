@@ -269,6 +269,13 @@ gunicorn -w 4 -b 127.0.0.1:8000 app:app
 
 Here shows some operations of our project. 
 
-
-
-
+* login with username and password
+  ![Alt text](gifs/login.gif)
+* add and view a patient
+  ![Alt text](gifs/patient.gif)
+* add and view a record
+  ![Alt text](gifs/record.gif)
+* add and view a COVID-19 test
+  ![Alt text](gifs/test.gif)
+* view statistics of all COVID-19 tests
+  ![Alt text](gifs/statistics.gif)
