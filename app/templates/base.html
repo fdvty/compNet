@@ -32,8 +32,12 @@
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url_for('unit_manage') }}">病人清单</a></li>
                     <li><a href="{{ url_for('record_manage') }}">病历记录</a></li>
-                    <li><a href="{{ url_for('quick_evaluation') }}">快速诊断(COVID-19)</a></li>
-                    <li><a href="{{ url_for('dashboards') }}">统计数据(COVID-19)</a></li>
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">智慧医疗<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url_for('quick_evaluation') }}">COVID-19 快速诊断</a></li>
+                        <li><a href="{{ url_for('dashboards') }}">COVID-19 统计数据</a></li>
+                    </ul>
+                </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_anonymous %}
